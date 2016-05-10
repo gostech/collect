@@ -34,9 +34,9 @@
 <string name="recapture_osm">Redo OSM Tagging</string>
 <string name="capture_video">Record Video</string>
 <string name="change_language">Change Language</string>
-<string name="change_password">ODK Password</string>
+<string name="change_password">Password</string>
 <string name="change_protocol_settings_default">Platform Settings</string>
-<string name="change_username">ODK Username</string>
+<string name="change_username">Username</string>
 <string name="clearanswer_confirm">Remove the response to \"%s\"?</string>
 <string name="clear_answer">Remove response</string>
 <string name="clear_answer_ask">Remove This Response?</string>
@@ -141,7 +141,7 @@
 <string name="username">Username</string>
 <string name="view_hierarchy">Go To Prompt</string>
 <string name="general_preferences">General Settings</string>
-<string name="click_to_web">Tap to visit http://opendatakit.org</string>
+<string name="click_to_web">Tap to visit http://portal.bioriskltd.co.uk</string>
 <string name="client">User Interface</string>
 <string name="show_splash">Show splash screen</string>
 <string name="show_splash_summary">Shows when application starts</string>
@@ -151,7 +151,7 @@
 <string name="use_odk_default">Use default image</string>
 <string name="change_splash_path">Change image</string>
 <string name="show_location">Show Location</string>
-<string name="app_url">http://opendatakit.org</string>
+<string name="app_url">http://portal.bioriskltd.co.uk</string>
 <string name="keep_changes">Save Changes</string>
 <string name="go_to_location">Go to Location</string>
 <string name="change_formlist_url">Form list path (appended to URL)</string>
