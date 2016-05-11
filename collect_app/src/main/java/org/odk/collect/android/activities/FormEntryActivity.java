@@ -14,14 +14,35 @@
 
 package org.odk.collect.android.activities;
 
-import java.io.File;
-import java.io.FileFilter;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Locale;
-
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.ProgressDialog;
+import android.content.*;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.provider.MediaStore.Images;
+import android.text.InputFilter;
+import android.text.Spanned;
+import android.util.DisplayMetrics;
+import android.util.Log;
+import android.view.*;
+import android.view.ContextMenu.ContextMenuInfo;
+import android.view.GestureDetector.OnGestureListener;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup.LayoutParams;
+import android.view.animation.Animation;
+import android.view.animation.Animation.AnimationListener;
+import android.view.animation.AnimationUtils;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.*;
 import org.javarosa.core.model.FormIndex;
 import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.core.model.instance.TreeElement;
@@ -52,54 +73,13 @@ import org.odk.collect.android.utilities.MediaUtils;
 import org.odk.collect.android.views.ODKView;
 import org.odk.collect.android.widgets.QuestionWidget;
 
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.app.ProgressDialog;
-import android.content.ContentValues;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.net.Uri;
-import android.os.AsyncTask;
-import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.provider.MediaStore.Images;
-import android.text.InputFilter;
-import android.text.Spanned;
-import android.util.DisplayMetrics;
-import android.util.Log;
-import android.view.ContextMenu;
-import android.view.ContextMenu.ContextMenuInfo;
-import android.view.GestureDetector;
-import android.view.GestureDetector.OnGestureListener;
-import android.view.Gravity;
-import android.view.KeyEvent;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.ViewGroup.LayoutParams;
-import android.view.animation.Animation;
-import android.view.animation.Animation.AnimationListener;
-import android.view.animation.AnimationUtils;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
-import android.widget.Toast;
+import java.io.File;
+import java.io.FileFilter;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Locale;
 
 /**
  * FormEntryActivity is responsible for displaying questions, animating
@@ -2788,5 +2768,16 @@ public class FormEntryActivity extends Activity implements AnimationListener,
         if (errorMessage != null && errorMessage.trim().length() > 0) {
             Toast.makeText(this, getString(R.string.save_point_error, errorMessage), Toast.LENGTH_LONG).show();
         }
+    }
+
+    public Bitmap saveImageNew(int requestCode, int resultCode, Intent data) {
+        if(requestCode==IMAGE_CAPTURE && resultCode==RESULT_OK) {
+            Log.i("Image Capture", "Performing Image Capture");
+            Bundle extras = data.getExtras();
+            Bitmap imageBitmap = (Bitmap) extras.get("data");
+            return imageBitmap;
+            //TODO: We need to worry about rotation etc - check this works first.
+        }
+        return null;
     }
 }
