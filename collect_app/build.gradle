@@ -22,11 +22,11 @@ android {
     buildToolsVersion(buildTools)
 
     defaultConfig {
-        applicationId("org.odk.collect.android")
-        minSdkVersion(8)
-        targetSdkVersion(8)
+        applicationId("uk.co.bioriskltd.odkcollect")
+        minSdkVersion(13)
+        targetSdkVersion(13)
         versionCode(1057)
-        versionName("1.4.8")
+        versionName("1.0.0")
     }
 
     buildTypes {

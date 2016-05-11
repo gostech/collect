@@ -7,7 +7,7 @@
         android:title="@string/app_name" >
         <intent
             android:action="android.intent.action.VIEW"
-            android:data="http://opendatakit.org" />
+            android:data="http://portal.bioriskltd.co.uk/" />
     </PreferenceScreen>
 
     <PreferenceCategory
@@ -47,7 +47,7 @@
         android:title="@string/autosend" >
         <CheckBoxPreference
             android:id="@+id/autosend_wifi"
-            android:defaultValue="false"
+            android:defaultValue="true"
             android:key="autosend_wifi"
             android:summary="@string/autosend_wifi_summary"
             android:title="@string/autosend_wifi" />
@@ -95,7 +95,7 @@
             android:key="delete_send"
             android:summary="@string/delete_after_send_summary"
             android:title="@string/delete_after_send"
-            android:defaultValue="false"/>
+            android:defaultValue="true"/>
         <CheckBoxPreference
             android:id="@+id/high_resolution"
             android:defaultValue="true"
