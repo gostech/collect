@@ -24,7 +24,6 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -76,7 +75,6 @@ import org.odk.collect.android.widgets.QuestionWidget;
 
 import java.io.File;
 import java.io.FileFilter;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.LinkedHashMap;
@@ -159,11 +157,6 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 
     private static final int PROGRESS_DIALOG = 1;
     private static final int SAVING_DIALOG = 2;
-
-    private static final int ORIENTATION_NORMAL=3;
-    private static final int ORIENTATION_LANDSCAPE=1;
-    private static final int ORIENTATION_INVERTED_LANDSCAPE=6;
-    private static final int ORIENTATION_INVERTED=8;
 
     private boolean mAutoSaved;
 
@@ -625,30 +618,6 @@ public class FormEntryActivity extends Activity implements AnimationListener,
                     Log.i(t,
                             "renamed " + fi.getAbsolutePath() + " to "
                                     + nf.getAbsolutePath());
-                }
-                try {
-                    ExifInterface exif = new ExifInterface(nf.getAbsolutePath());
-                    String exifOrientation = exif.getAttribute(ExifInterface.TAG_ORIENTATION);
-                    int orientation=Integer.parseInt(exifOrientation);
-                    int rotationAmount=0;
-                    switch (orientation) {
-                        case ORIENTATION_NORMAL:
-                            //Nothing to do
-                            break;
-                        case ORIENTATION_LANDSCAPE:
-                            rotationAmount -= 90;
-                            break;
-                        case ORIENTATION_INVERTED:
-                            rotationAmount -= 180;
-                            break;
-                        case ORIENTATION_INVERTED_LANDSCAPE:
-                            rotationAmount -= 270;
-                            break;
-                        default:
-                            Log.e(t, "Invalid orientation!");
-                    }
-                } catch (IOException iox) {
-                    Log.e(t, "Failed to get orientation!");
                 }
                 ((ODKView) mCurrentView).setBinaryData(nf);
                 saveAnswersForCurrentScreen(DO_NOT_EVALUATE_CONSTRAINTS);

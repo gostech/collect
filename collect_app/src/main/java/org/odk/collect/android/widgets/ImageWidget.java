@@ -14,9 +14,23 @@
 
 package org.odk.collect.android.widgets;
 
-import java.io.File;
-
-import android.view.ViewGroup;
+import android.app.Activity;
+import android.content.ActivityNotFoundException;
+import android.content.ContentValues;
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
+import android.net.Uri;
+import android.provider.MediaStore.Images;
+import android.util.Log;
+import android.util.TypedValue;
+import android.view.Display;
+import android.view.View;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
 import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.core.model.data.StringData;
@@ -27,20 +41,9 @@ import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.utilities.FileUtils;
 import org.odk.collect.android.utilities.MediaUtils;
 
-import android.app.Activity;
-import android.content.ActivityNotFoundException;
-import android.content.ContentValues;
-import android.content.Context;
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.net.Uri;
-import android.provider.MediaStore.Images;
-import android.util.Log;
-import android.util.TypedValue;
-import android.view.Display;
-import android.view.View;
-import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 /**
  * Widget that allows user to take pictures, sounds or video and add them to the form.
@@ -50,6 +53,11 @@ import android.view.inputmethod.InputMethodManager;
  */
 public class ImageWidget extends QuestionWidget implements IBinaryWidget {
     private final static String t = "MediaWidget";
+
+    private static final int ORIENTATION_NORMAL=3;
+    private static final int ORIENTATION_LANDSCAPE=1;
+    private static final int ORIENTATION_INVERTED_LANDSCAPE=6;
+    private static final int ORIENTATION_INVERTED=8;
 
     private Button mCaptureButton;
     private Button mChooseButton;
@@ -262,6 +270,34 @@ public class ImageWidget extends QuestionWidget implements IBinaryWidget {
 
         File newImage = (File) newImageObj;
         if (newImage.exists()) {
+            int rotationAmount=0;
+            try {
+                ExifInterface exif = new ExifInterface(newImage.getAbsolutePath());
+                String exifOrientation = exif.getAttribute(ExifInterface.TAG_ORIENTATION);
+                int orientation=Integer.parseInt(exifOrientation);
+                switch (orientation) {
+                    case 1:
+                        rotationAmount=0;
+                        break;
+                    case 3:
+                        rotationAmount=180;
+                        break;
+                    case 6:
+                        rotationAmount=90;
+                        break;
+                    case 8:
+                        rotationAmount=270;
+                        break;
+                    default:
+                        Log.e(t, "Invalid orientation!");
+                }
+            } catch (IOException iox) {
+                Log.e(t, "Failed to get orientation!");
+            }
+            if(rotationAmount!=0) {
+                rotateImage((File) newImageObj, newImage, rotationAmount);
+            }
+
             // Add the new image to the Media content provider so that the
             // viewing is fast in Android 2.0+
         	ContentValues values = new ContentValues(6);
@@ -282,6 +318,36 @@ public class ImageWidget extends QuestionWidget implements IBinaryWidget {
         }
 
     	Collect.getInstance().getFormController().setIndexWaitingForData(null);
+    }
+
+    private static void rotateImage(File newImageObj, File newImage, int rotationAmount) {
+        try {
+            Bitmap original = BitmapFactory.decodeFile(newImage.getAbsolutePath());
+            int originalWidth=original.getWidth();
+            int originalHeight=original.getHeight();
+            Matrix matrix = new Matrix();
+            matrix.postRotate(rotationAmount);
+            FileOutputStream fos = null;
+            Bitmap scaledBitmap = Bitmap.createScaledBitmap(original, originalWidth, originalHeight, true);
+            Bitmap rotatedBitmap = Bitmap.createBitmap(scaledBitmap, 0, 0, scaledBitmap.getWidth(), scaledBitmap.getHeight(), matrix, true);
+            int newWidth=rotatedBitmap.getWidth();
+            int newHeight=rotatedBitmap.getHeight();
+            try {
+                fos = new FileOutputStream(newImageObj.getAbsolutePath());
+                rotatedBitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+            } catch (Exception ex) {
+                Log.e("Saving bitmap", ex.getMessage());
+            } finally {
+                try {
+                    if (fos != null)
+                        fos.close();
+                } catch (IOException iox) {
+                    Log.e("Closing bitmap", iox.getMessage());
+                }
+            }
+        }catch (Exception ex) {
+            Log.e("Rotating bitmap", ex.getMessage());
+        }
     }
 
     @Override
