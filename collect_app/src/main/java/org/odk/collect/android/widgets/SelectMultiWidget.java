@@ -24,7 +24,6 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.text.method.LinkMovementMethod;
 import org.javarosa.core.model.SelectChoice;
 import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.core.model.data.SelectMultiData;
@@ -43,16 +42,15 @@ import java.util.List;
 
 /**
  * SelctMultiWidget handles multiple selection fields using checkboxes.
- * 
+ *
  * @author Carl Hartung (carlhartung@gmail.com)
  * @author Yaw Anokwa (yanokwa@gmail.com)
  */
 public class SelectMultiWidget extends QuestionWidget {
-    private boolean mCheckboxInit = true;
     List<SelectChoice> mItems;
-
-    private ArrayList<CheckBox> mCheckboxes;
     ArrayList<MediaLayout> playList;
+    private boolean mCheckboxInit = true;
+    private ArrayList<CheckBox> mCheckboxes;
     private int playcounter = 0;
 
 
@@ -82,10 +80,10 @@ public class SelectMultiWidget extends QuestionWidget {
             for (int i = 0; i < mItems.size(); i++) {
                 String choiceName = prompt.getSelectChoiceText(mItems.get(i));
                 CharSequence choiceDisplayName;
-                if ( choiceName != null ) {
-                  choiceDisplayName = TextUtils.textToHtml(choiceName);
+                if (choiceName != null) {
+                    choiceDisplayName = TextUtils.textToHtml(choiceName);
                 } else {
-                  choiceDisplayName = "";
+                    choiceDisplayName = "";
                 }
                 // no checkbox group so id by answer + offset
                 CheckBox c = new CheckBox(getContext());
@@ -96,7 +94,7 @@ public class SelectMultiWidget extends QuestionWidget {
                 c.setTextSize(TypedValue.COMPLEX_UNIT_DIP, mAnswerFontsize);
                 c.setFocusable(!prompt.isReadOnly());
                 c.setEnabled(!prompt.isReadOnly());
-                
+
                 for (int vi = 0; vi < ve.size(); vi++) {
                     // match based on value, not key
                     if (mItems.get(i).getValue().equals(ve.get(vi).getValue())) {
@@ -113,12 +111,12 @@ public class SelectMultiWidget extends QuestionWidget {
                         if (!mCheckboxInit && mPrompt.isReadOnly()) {
                             if (buttonView.isChecked()) {
                                 buttonView.setChecked(false);
-                               	Collect.getInstance().getActivityLogger().logInstanceAction(this, "onItemClick.deselect", 
-                            			mItems.get((Integer)buttonView.getTag()).getValue(), mPrompt.getIndex());
+                                Collect.getInstance().getActivityLogger().logInstanceAction(this, "onItemClick.deselect",
+                                        mItems.get((Integer) buttonView.getTag()).getValue(), mPrompt.getIndex());
                             } else {
                                 buttonView.setChecked(true);
-                               	Collect.getInstance().getActivityLogger().logInstanceAction(this, "onItemClick.select", 
-                            			mItems.get((Integer)buttonView.getTag()).getValue(), mPrompt.getIndex());
+                                Collect.getInstance().getActivityLogger().logInstanceAction(this, "onItemClick.select",
+                                        mItems.get((Integer) buttonView.getTag()).getValue(), mPrompt.getIndex());
                             }
                         }
                     }
@@ -126,8 +124,8 @@ public class SelectMultiWidget extends QuestionWidget {
 
                 String audioURI = null;
                 audioURI =
-                    prompt.getSpecialFormSelectChoiceText(mItems.get(i),
-                        FormEntryCaption.TEXT_FORM_AUDIO);
+                        prompt.getSpecialFormSelectChoiceText(mItems.get(i),
+                                FormEntryCaption.TEXT_FORM_AUDIO);
 
                 String imageURI;
                 if (mItems.get(i) instanceof ExternalSelectChoice) {
@@ -165,22 +163,22 @@ public class SelectMultiWidget extends QuestionWidget {
 
     @Override
     public void clearAnswer() {
-    	for ( CheckBox c : mCheckboxes ) {
-    		if ( c.isChecked() ) {
-    			c.setChecked(false);
-    		}
-    	}
+        for (CheckBox c : mCheckboxes) {
+            if (c.isChecked()) {
+                c.setChecked(false);
+            }
+        }
     }
 
 
     @Override
     public IAnswerData getAnswer() {
         List<Selection> vc = new ArrayList<Selection>();
-        for ( int i = 0; i < mCheckboxes.size() ; ++i ) {
-        	CheckBox c = mCheckboxes.get(i);
-        	if ( c.isChecked() ) {
-        		vc.add(new Selection(mItems.get(i)));
-        	}
+        for (int i = 0; i < mCheckboxes.size(); ++i) {
+            CheckBox c = mCheckboxes.get(i);
+            if (c.isChecked()) {
+                vc.add(new Selection(mItems.get(i)));
+            }
         }
 
         if (vc.size() == 0) {
@@ -196,7 +194,7 @@ public class SelectMultiWidget extends QuestionWidget {
     public void setFocus(Context context) {
         // Hide the soft keyboard if it's showing.
         InputMethodManager inputManager =
-            (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+                (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
         inputManager.hideSoftInputFromWindow(this.getWindowToken(), 0);
     }
 
@@ -216,34 +214,34 @@ public class SelectMultiWidget extends QuestionWidget {
             c.cancelLongPress();
         }
     }
-    
+
     public void playNextSelectItem() {
         if (!this.isShown()) {
             return;
         }
         // if there's more, set up to play the next item
         if (playcounter < playList.size()) {
-        mPlayer.setOnCompletionListener(new OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mediaPlayer) {
-                resetQuestionTextColor();
-                mediaPlayer.reset();
-                playNextSelectItem();
-            }
-        });
-        // play the current item
-        playList.get(playcounter).playAudio();
-        playcounter++;
-        
-     } else {
-         playcounter = 0;
-         mPlayer.setOnCompletionListener(null);
-         mPlayer.reset();
-     }
+            mPlayer.setOnCompletionListener(new OnCompletionListener() {
+                @Override
+                public void onCompletion(MediaPlayer mediaPlayer) {
+                    resetQuestionTextColor();
+                    mediaPlayer.reset();
+                    playNextSelectItem();
+                }
+            });
+            // play the current item
+            playList.get(playcounter).playAudio();
+            playcounter++;
+
+        } else {
+            playcounter = 0;
+            mPlayer.setOnCompletionListener(null);
+            mPlayer.reset();
+        }
 
     }
-    
-    
+
+
     @Override
     public void playAllPromptText() {
         // set up to play the items when the
@@ -266,7 +264,7 @@ public class SelectMultiWidget extends QuestionWidget {
         super.resetQuestionTextColor();
         for (MediaLayout layout : playList) {
             layout.resetTextFormatting();
-        }   
+        }
     }
 
 }

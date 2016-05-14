@@ -14,22 +14,17 @@
 
 package org.odk.collect.android.activities;
 
-import org.odk.collect.android.R;
-import org.odk.collect.android.application.Collect;
-
 import android.app.TabActivity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.TabHost;
-import android.widget.TabWidget;
-import android.widget.TextView;
+import android.widget.*;
+import org.odk.collect.android.R;
+import org.odk.collect.android.application.Collect;
 
 /**
  * A host activity for {@link InstanceChooserList}.
- * 
+ *
  * @author Yaw Anokwa (yanokwa@gmail.com)
  */
 public class InstanceChooserTabs extends TabActivity {

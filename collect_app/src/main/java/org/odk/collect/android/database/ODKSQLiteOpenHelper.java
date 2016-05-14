@@ -14,8 +14,6 @@
 
 package org.odk.collect.android.database;
 
-import java.io.File;
-
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteException;
@@ -23,6 +21,8 @@ import android.os.Environment;
 import android.util.Log;
 import org.odk.collect.android.R;
 import org.odk.collect.android.application.Collect;
+
+import java.io.File;
 
 
 /**
@@ -58,12 +58,12 @@ public abstract class ODKSQLiteOpenHelper {
      * Create a helper object to create, open, and/or manage a database. The database is not
      * actually created or opened until one of {@link #getWritableDatabase} or
      * {@link #getReadableDatabase} is called.
-     * 
-     * @param path to the file
-     * @param name of the database file, or null for an in-memory database
+     *
+     * @param path    to the file
+     * @param name    of the database file, or null for an in-memory database
      * @param factory to use for creating cursor objects, or null for the default
      * @param version number of the database (starting at 1); if the database is older,
-     *            {@link #onUpgrade} will be used to upgrade the database
+     *                {@link #onUpgrade} will be used to upgrade the database
      */
     public ODKSQLiteOpenHelper(String path, String name, CursorFactory factory, int version) {
         if (version < 1)
@@ -84,9 +84,9 @@ public abstract class ODKSQLiteOpenHelper {
      * Errors such as bad permissions or a full disk may cause this operation to fail, but future
      * attempts may succeed if the problem is fixed.
      * </p>
-     * 
-     * @throws SQLiteException if the database cannot be opened for writing
+     *
      * @return a read/write database object valid until {@link #close} is called
+     * @throws SQLiteException if the database cannot be opened for writing
      */
     public synchronized SQLiteDatabase getWritableDatabase() {
         if (mDatabase != null && mDatabase.isOpen() && !mDatabase.isReadOnly()) {
@@ -161,10 +161,10 @@ public abstract class ODKSQLiteOpenHelper {
      * problem is fixed, a future call to {@link #getWritableDatabase} may succeed, in which case
      * the read-only database object will be closed and the read/write object will be returned in
      * the future.
-     * 
-     * @throws SQLiteException if the database cannot be opened
+     *
      * @return a database object valid until {@link #getWritableDatabase} or {@link #close} is
-     *         called.
+     * called.
+     * @throws SQLiteException if the database cannot be opened
      */
     public synchronized SQLiteDatabase getReadableDatabase() {
         if (mDatabase != null && mDatabase.isOpen()) {
@@ -234,7 +234,7 @@ public abstract class ODKSQLiteOpenHelper {
     /**
      * Called when the database is created for the first time. This is where the creation of tables
      * and the initial population of the tables should happen.
-     * 
+     *
      * @param db The database.
      */
     public abstract void onCreate(SQLiteDatabase db);
@@ -249,8 +249,8 @@ public abstract class ODKSQLiteOpenHelper {
      * ALTER TABLE to insert them into a live table. If you rename or remove columns you can use
      * ALTER TABLE to rename the old table, then create the new table and then populate the new
      * table with the contents of the old table.
-     * 
-     * @param db The database.
+     *
+     * @param db         The database.
      * @param oldVersion The old database version.
      * @param newVersion The new database version.
      */
@@ -260,7 +260,7 @@ public abstract class ODKSQLiteOpenHelper {
     /**
      * Called when the database has been opened. Override method should check
      * {@link SQLiteDatabase#isReadOnly} before updating the database.
-     * 
+     *
      * @param db The database.
      */
     public void onOpen(SQLiteDatabase db) {

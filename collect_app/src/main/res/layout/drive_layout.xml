@@ -18,14 +18,14 @@ the License.
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
-                android:layout_alignParentTop="true" >
+                android:layout_alignParentTop="true">
 
     <LinearLayout
             android:id="@+id/buttonholder"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:orientation="horizontal" >
+            android:orientation="horizontal">
 
         <Button
                 android:id="@+id/back_button"
@@ -66,9 +66,9 @@ the License.
 
         <EditText
                 android:imeOptions="actionSearch"
-				android:paddingStart="8dip"
+                android:paddingStart="8dip"
                 android:paddingLeft="8dip"
-				android:paddingEnd="8dip"
+                android:paddingEnd="8dip"
                 android:paddingRight="8dip"
                 android:paddingBottom="0dip"
                 android:minHeight="50dp"
@@ -94,7 +94,7 @@ the License.
             android:layout_height="fill_parent"
             android:layout_below="@+id/searchholder"
             android:layout_above="@+id/buttonholder"
-            />
+    />
 
     <TextView
             android:id="@android:id/empty"
@@ -102,7 +102,7 @@ the License.
             android:layout_height="fill_parent"
             android:gravity="center"
             android:text="@string/no_items_display"
-            android:textSize="21sp" />
+            android:textSize="21sp"/>
 
 
 </RelativeLayout>

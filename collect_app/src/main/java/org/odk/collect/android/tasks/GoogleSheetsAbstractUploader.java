@@ -14,39 +14,6 @@
 
 package org.odk.collect.android.tasks;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.net.URLConnection;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import org.odk.collect.android.R;
-import org.odk.collect.android.application.Collect;
-import org.odk.collect.android.exception.FormException;
-import org.odk.collect.android.picasa.AlbumEntry;
-import org.odk.collect.android.picasa.AlbumFeed;
-import org.odk.collect.android.picasa.PhotoEntry;
-import org.odk.collect.android.picasa.PicasaClient;
-import org.odk.collect.android.picasa.PicasaUrl;
-import org.odk.collect.android.picasa.UserFeed;
-import org.odk.collect.android.preferences.PreferencesActivity;
-import org.odk.collect.android.provider.FormsProviderAPI.FormsColumns;
-import org.odk.collect.android.provider.InstanceProviderAPI;
-import org.odk.collect.android.provider.InstanceProviderAPI.InstanceColumns;
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
-
 import android.content.ContentValues;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -57,7 +24,6 @@ import android.text.Html;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.Xml;
-
 import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
@@ -65,13 +31,27 @@ import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.InputStreamContent;
 import com.google.gdata.client.spreadsheet.SpreadsheetService;
 import com.google.gdata.client.spreadsheet.WorksheetQuery;
-import com.google.gdata.data.spreadsheet.CellEntry;
-import com.google.gdata.data.spreadsheet.CellFeed;
-import com.google.gdata.data.spreadsheet.ListEntry;
-import com.google.gdata.data.spreadsheet.ListFeed;
-import com.google.gdata.data.spreadsheet.WorksheetEntry;
-import com.google.gdata.data.spreadsheet.WorksheetFeed;
+import com.google.gdata.data.spreadsheet.*;
 import com.google.gdata.util.ServiceException;
+import org.odk.collect.android.R;
+import org.odk.collect.android.application.Collect;
+import org.odk.collect.android.exception.FormException;
+import org.odk.collect.android.picasa.*;
+import org.odk.collect.android.preferences.PreferencesActivity;
+import org.odk.collect.android.provider.FormsProviderAPI.FormsColumns;
+import org.odk.collect.android.provider.InstanceProviderAPI;
+import org.odk.collect.android.provider.InstanceProviderAPI.InstanceColumns;
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.net.*;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author carlhartung (chartung@nafundi.com)
@@ -79,16 +59,13 @@ import com.google.gdata.util.ServiceException;
 public abstract class GoogleSheetsAbstractUploader<Params, Progress, Result> extends
         GoogleSheetsTask<Long, Integer, HashMap<String, String>> {
 
-    private final static String tag = "GoogleSheetsInstanceUploaderTask";
-
-    protected HashMap<String, String> mResults;
-
     protected static final String picasa_fail = "Picasa Error: ";
     protected static final String oauth_fail = "OAUTH Error: ";
     protected static final String form_fail = "Form Error: ";
-
+    private final static String tag = "GoogleSheetsInstanceUploaderTask";
     // needed in case of rate limiting
     private static final int GOOGLE_SLEEP_TIME = 1000;
+    protected HashMap<String, String> mResults;
 
     /**
      * @param selection
@@ -117,7 +94,7 @@ public abstract class GoogleSheetsAbstractUploader<Params, Progress, Result> ext
 
                     String formSelection = FormsColumns.JR_FORM_ID + "=?";
                     String[] formSelectionArgs = {
-                        jrformid
+                            jrformid
                     };
                     Cursor formcursor = Collect
                             .getInstance()
@@ -159,7 +136,7 @@ public abstract class GoogleSheetsAbstractUploader<Params, Progress, Result> ext
     }
 
     private boolean uploadOneSubmission(String id, String instanceFilePath, String jrFormId,
-            String token, String formFilePath) {
+                                        String token, String formFilePath) {
         // if the token is null fail immediately
         if (token == null) {
             mResults.put(id, oauth_fail + Collect.getInstance().getString(R.string.invalid_oauth));
@@ -268,7 +245,7 @@ public abstract class GoogleSheetsAbstractUploader<Params, Progress, Result> ext
 
         String selection = InstanceColumns._ID + "=?";
         String[] selectionArgs = {
-            id
+                id
         };
 
         Cursor cursor = null;
@@ -323,7 +300,7 @@ public abstract class GoogleSheetsAbstractUploader<Params, Progress, Result> ext
                         id,
                         form_fail
                                 + Collect.getInstance().getString(R.string.invalid_sheet_id,
-                                        urlString));
+                                urlString));
                 return false;
             }
             sheetId = urlString.substring(start, end);
@@ -358,7 +335,7 @@ public abstract class GoogleSheetsAbstractUploader<Params, Progress, Result> ext
                         id,
                         form_fail
                                 + Collect.getInstance().getString(
-                                        R.string.google_sheets_access_denied));
+                                R.string.google_sheets_access_denied));
             } else {
                 mResults.put(id, form_fail + Html.fromHtml(e.getResponseBody()));
             }
@@ -429,7 +406,7 @@ public abstract class GoogleSheetsAbstractUploader<Params, Progress, Result> ext
                         id,
                         form_fail
                                 + Collect.getInstance().getString(
-                                        R.string.google_sheets_update_error));
+                                R.string.google_sheets_update_error));
                 return false;
             }
 
@@ -564,7 +541,7 @@ public abstract class GoogleSheetsAbstractUploader<Params, Progress, Result> ext
                     id,
                     form_fail
                             + Collect.getInstance().getString(
-                                    R.string.google_sheets_missing_columns, missingString));
+                            R.string.google_sheets_missing_columns, missingString));
             return false;
         }
 
@@ -629,8 +606,8 @@ public abstract class GoogleSheetsAbstractUploader<Params, Progress, Result> ext
     }
 
     private void uploadPhotosToPicasa(HashMap<String, String> photos,
-            HashMap<String, PhotoEntry> uploaded, PicasaClient client, AlbumEntry albumToUse,
-            File instanceFile) throws IOException {
+                                      HashMap<String, PhotoEntry> uploaded, PicasaClient client, AlbumEntry albumToUse,
+                                      File instanceFile) throws IOException {
         Iterator<String> itr = photos.keySet().iterator();
         while (itr.hasNext()) {
             String key = itr.next();
@@ -641,7 +618,7 @@ public abstract class GoogleSheetsAbstractUploader<Params, Progress, Result> ext
             // to see if this photo already has a picasa_id
             String selection = Images.Media.DATA + "=?";
             String[] selectionArgs = {
-                filename
+                    filename
             };
             Cursor c = Collect.getInstance().getContentResolver()
                     .query(Images.Media.EXTERNAL_CONTENT_URI, null, selection, selectionArgs, null);
@@ -698,7 +675,7 @@ public abstract class GoogleSheetsAbstractUploader<Params, Progress, Result> ext
                 // update the content provider picasa_id once we upload
                 String where = Images.Media.DATA + "=?";
                 String[] whereArgs = {
-                    toUpload.getAbsolutePath()
+                        toUpload.getAbsolutePath()
                 };
                 Collect.getInstance().getContentResolver()
                         .update(Images.Media.EXTERNAL_CONTENT_URI, cv, where, whereArgs);
@@ -828,7 +805,7 @@ public abstract class GoogleSheetsAbstractUploader<Params, Progress, Result> ext
     }
 
     private void processInstanceXML(File instanceFile, HashMap<String, String> answersToUpload,
-            HashMap<String, String> photosToUpload) throws XmlPullParserException, IOException,
+                                    HashMap<String, String> photosToUpload) throws XmlPullParserException, IOException,
             FormException {
         FileInputStream in;
 
@@ -842,7 +819,7 @@ public abstract class GoogleSheetsAbstractUploader<Params, Progress, Result> ext
     }
 
     private void readInstanceFeed(XmlPullParser parser, HashMap<String, String> answersToUpload,
-            HashMap<String, String> photosToUpload) throws XmlPullParserException, IOException,
+                                  HashMap<String, String> photosToUpload) throws XmlPullParserException, IOException,
             FormException {
         ArrayList<String> path = new ArrayList<String>();
 
