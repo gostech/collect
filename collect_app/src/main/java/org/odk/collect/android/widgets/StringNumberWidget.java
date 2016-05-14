@@ -14,18 +14,17 @@
 
 package org.odk.collect.android.widgets;
 
-import org.javarosa.core.model.data.IAnswerData;
-import org.javarosa.core.model.data.StringData;
-import org.javarosa.form.api.FormEntryPrompt;
-
 import android.content.Context;
 import android.text.InputType;
 import android.text.method.DigitsKeyListener;
 import android.util.TypedValue;
+import org.javarosa.core.model.data.IAnswerData;
+import org.javarosa.core.model.data.StringData;
+import org.javarosa.form.api.FormEntryPrompt;
 
 /**
  * Widget that restricts values to integers.
- * 
+ *
  * @author Carl Hartung (carlhartung@gmail.com)
  */
 public class StringNumberWidget extends StringWidget {
@@ -63,15 +62,15 @@ public class StringNumberWidget extends StringWidget {
         if (s != null) {
             mAnswer.setText(s);
         }
-        
+
         setupChangeListener();
     }
 
 
     @Override
     public IAnswerData getAnswer() {
-    	clearFocus();
-    	String s = mAnswer.getText().toString();
+        clearFocus();
+        String s = mAnswer.getText().toString();
         if (s == null || s.equals("")) {
             return null;
         } else {

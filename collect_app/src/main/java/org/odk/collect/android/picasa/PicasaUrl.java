@@ -22,29 +22,29 @@ import com.google.api.client.util.Key;
  */
 public class PicasaUrl extends GenericUrl {
 
-  /** Whether to pretty print HTTP requests and responses. */   
-  private static final boolean PRETTY_PRINT = true;
-  
-  public static final String ROOT_URL = "https://picasaweb.google.com/data/";
+    public static final String ROOT_URL = "https://picasaweb.google.com/data/";
+    /**
+     * Whether to pretty print HTTP requests and responses.
+     */
+    private static final boolean PRETTY_PRINT = true;
+    @Key("max-results")
+    public Integer maxResults;
 
-  @Key("max-results")
-  public Integer maxResults;
+    @Key
+    public String kinds;
 
-  @Key
-  public String kinds;
+    public PicasaUrl(String url) {
+        super(url);
+        this.set("prettyPrint", PRETTY_PRINT);
+    }
 
-  public PicasaUrl(String url) {
-    super(url);
-    this.set("prettyPrint", PRETTY_PRINT);
-  }
-
-  /**
-   * Constructs a new Picasa Web Albums URL based on the given relative path.
-   *
-   * @param relativePath encoded path relative to the {@link #ROOT_URL}
-   * @return new Picasa URL
-   */
-  public static PicasaUrl relativeToRoot(String relativePath) {
-    return new PicasaUrl(ROOT_URL + relativePath);
-  }
+    /**
+     * Constructs a new Picasa Web Albums URL based on the given relative path.
+     *
+     * @param relativePath encoded path relative to the {@link #ROOT_URL}
+     * @return new Picasa URL
+     */
+    public static PicasaUrl relativeToRoot(String relativePath) {
+        return new PicasaUrl(ROOT_URL + relativePath);
+    }
 }

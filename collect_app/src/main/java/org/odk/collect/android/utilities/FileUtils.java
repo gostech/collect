@@ -14,26 +14,18 @@
 
 package org.odk.collect.android.utilities;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Log;
 import org.apache.commons.io.IOUtils;
 import org.javarosa.xform.parse.XFormParser;
 import org.kxml2.kdom.Document;
 import org.kxml2.kdom.Element;
 import org.kxml2.kdom.Node;
-
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.util.Log;
 import org.odk.collect.android.R;
 import org.odk.collect.android.application.Collect;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.math.BigInteger;
 import java.nio.channels.FileChannel;
 import java.security.MessageDigest;
@@ -46,17 +38,14 @@ import java.util.HashMap;
  * @author Carl Hartung (carlhartung@gmail.com)
  */
 public class FileUtils {
-    private final static String t = "FileUtils";
-
     // Used to validate and display valid form names.
     public static final String VALID_FILENAME = "[ _\\-A-Za-z0-9]*.x[ht]*ml";
-
     public static final String FORMID = "formid";
     public static final String VERSION = "version"; // arbitrary string in OpenRosa 1.0
     public static final String TITLE = "title";
     public static final String SUBMISSIONURI = "submission";
     public static final String BASE64_RSA_PUBLIC_KEY = "base64RsaPublicKey";
-
+    private final static String t = "FileUtils";
 
     public static boolean createFolder(String path) {
         boolean made = true;
@@ -204,9 +193,9 @@ public class FileUtils {
         options.inSampleSize = scale;
         Bitmap b = BitmapFactory.decodeFile(f.getAbsolutePath(), options);
         if (b != null) {
-        Log.i(t,
-            "Screen is " + screenHeight + "x" + screenWidth + ".  Image has been scaled down by "
-                    + scale + " to " + b.getHeight() + "x" + b.getWidth());
+            Log.i(t,
+                    "Screen is " + screenHeight + "x" + screenWidth + ".  Image has been scaled down by "
+                            + scale + " to " + b.getHeight() + "x" + b.getWidth());
         }
         return b;
     }
@@ -285,9 +274,9 @@ public class FileUtils {
             try {
                 doc = XFormParser.getXMLDocument(isr);
             } catch (IOException e) {
-				e.printStackTrace();
-				throw new IllegalStateException("Unable to parse XML document", e);
-			} finally {
+                e.printStackTrace();
+                throw new IllegalStateException("Unable to parse XML document", e);
+            } finally {
                 try {
                     isr.close();
                 } catch (IOException e) {
@@ -306,7 +295,7 @@ public class FileUtils {
             }
 
             Element model = getChildElement(head, "model");
-            Element cur = getChildElement(model,"instance");
+            Element cur = getChildElement(model, "instance");
 
             int idx = cur.getChildCount();
             int i;
@@ -325,9 +314,9 @@ public class FileUtils {
 
                 String version = cur.getAttributeValue(null, "version");
                 String uiVersion = cur.getAttributeValue(null, "uiVersion");
-                if ( uiVersion != null ) {
-                	// pre-OpenRosa 1.0 variant of spec
-                	Log.e(t, "Obsolete use of uiVersion -- IGNORED -- only using version: " + version);
+                if (uiVersion != null) {
+                    // pre-OpenRosa 1.0 variant of spec
+                    Log.e(t, "Obsolete use of uiVersion -- IGNORED -- only using version: " + version);
                 }
 
                 fields.put(FORMID, (id == null) ? xmlns : id);
@@ -341,8 +330,8 @@ public class FileUtils {
                 fields.put(SUBMISSIONURI, (submissionUri == null) ? null : submissionUri);
                 String base64RsaPublicKey = submission.getAttributeValue(null, "base64RsaPublicKey");
                 fields.put(BASE64_RSA_PUBLIC_KEY,
-                  (base64RsaPublicKey == null || base64RsaPublicKey.trim().length() == 0)
-                  ? null : base64RsaPublicKey.trim());
+                        (base64RsaPublicKey == null || base64RsaPublicKey.trim().length() == 0)
+                                ? null : base64RsaPublicKey.trim());
             } catch (Exception e) {
                 Log.i(t, xmlFile.getAbsolutePath() + " does not have a submission element");
                 // and that's totally fine.

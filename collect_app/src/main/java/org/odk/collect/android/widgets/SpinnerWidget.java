@@ -14,18 +14,6 @@
 
 package org.odk.collect.android.widgets;
 
-import java.util.List;
-
-import org.javarosa.core.model.SelectChoice;
-import org.javarosa.core.model.data.IAnswerData;
-import org.javarosa.core.model.data.SelectOneData;
-import org.javarosa.core.model.data.helper.Selection;
-import org.javarosa.form.api.FormEntryPrompt;
-import org.javarosa.xpath.expr.XPathFuncExpr;
-import org.odk.collect.android.R;
-import org.odk.collect.android.application.Collect;
-import org.odk.collect.android.external.ExternalDataUtil;
-
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -39,19 +27,30 @@ import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
+import org.javarosa.core.model.SelectChoice;
+import org.javarosa.core.model.data.IAnswerData;
+import org.javarosa.core.model.data.SelectOneData;
+import org.javarosa.core.model.data.helper.Selection;
+import org.javarosa.form.api.FormEntryPrompt;
+import org.javarosa.xpath.expr.XPathFuncExpr;
+import org.odk.collect.android.R;
+import org.odk.collect.android.application.Collect;
+import org.odk.collect.android.external.ExternalDataUtil;
+
+import java.util.List;
 
 /**
  * SpinnerWidget handles select-one fields. Instead of a list of buttons it uses a spinner, wherein
  * the user clicks a button and the choices pop up in a dialogue box. The goal is to be more
  * compact. If images, audio, or video are specified in the select answers they are ignored.
- * 
+ *
  * @author Jeff Beorse (jeff@beorse.net)
  */
 public class SpinnerWidget extends QuestionWidget {
+    private static final int BROWN = 0xFF936931;
     List<SelectChoice> mItems;
     Spinner spinner;
     String[] choices;
-    private static final int BROWN = 0xFF936931;
 
 
     public SpinnerWidget(Context context, FormEntryPrompt prompt) {
@@ -66,7 +65,7 @@ public class SpinnerWidget extends QuestionWidget {
         }
 
         spinner = new Spinner(context);
-        choices = new String[mItems.size()+1];
+        choices = new String[mItems.size() + 1];
         for (int i = 0; i < mItems.size(); i++) {
             choices[i] = prompt.getSelectChoiceText(mItems.get(i));
         }
@@ -74,8 +73,8 @@ public class SpinnerWidget extends QuestionWidget {
 
         // The spinner requires a custom adapter. It is defined below
         SpinnerAdapter adapter =
-            new SpinnerAdapter(getContext(), android.R.layout.simple_spinner_item, choices,
-                    TypedValue.COMPLEX_UNIT_DIP, mQuestionFontsize);
+                new SpinnerAdapter(getContext(), android.R.layout.simple_spinner_item, choices,
+                        TypedValue.COMPLEX_UNIT_DIP, mQuestionFontsize);
 
         spinner.setAdapter(adapter);
         spinner.setPrompt(prompt.getQuestionText());
@@ -100,23 +99,24 @@ public class SpinnerWidget extends QuestionWidget {
 
         spinner.setOnItemSelectedListener(new OnItemSelectedListener() {
 
-			@Override
-			public void onItemSelected(AdapterView<?> parent, View view,
-					int position, long id) {
-				if ( position == mItems.size() ) {
-					Collect.getInstance().getActivityLogger().logInstanceAction(this, "onCheckedChanged.clearValue", 
-		    			"", mPrompt.getIndex());
-				} else {
-					Collect.getInstance().getActivityLogger().logInstanceAction(this, "onCheckedChanged", 
-			    			mItems.get(position).getValue(), mPrompt.getIndex());
-				}
-			}
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view,
+                                       int position, long id) {
+                if (position == mItems.size()) {
+                    Collect.getInstance().getActivityLogger().logInstanceAction(this, "onCheckedChanged.clearValue",
+                            "", mPrompt.getIndex());
+                } else {
+                    Collect.getInstance().getActivityLogger().logInstanceAction(this, "onCheckedChanged",
+                            mItems.get(position).getValue(), mPrompt.getIndex());
+                }
+            }
 
-			@Override
-			public void onNothingSelected(AdapterView<?> arg0) {
-				
-			}});
-        
+            @Override
+            public void onNothingSelected(AdapterView<?> arg0) {
+
+            }
+        });
+
         addAnswerView(spinner);
 
     }
@@ -124,7 +124,7 @@ public class SpinnerWidget extends QuestionWidget {
 
     @Override
     public IAnswerData getAnswer() {
-    	clearFocus();
+        clearFocus();
         int i = spinner.getSelectedItemPosition();
         if (i == -1 || i == mItems.size()) {
             return null;
@@ -147,21 +147,32 @@ public class SpinnerWidget extends QuestionWidget {
     public void setFocus(Context context) {
         // Hide the soft keyboard if it's showing.
         InputMethodManager inputManager =
-            (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+                (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
         inputManager.hideSoftInputFromWindow(this.getWindowToken(), 0);
 
+    }
+
+    @Override
+    public void setOnLongClickListener(OnLongClickListener l) {
+        spinner.setOnLongClickListener(l);
+    }
+
+    @Override
+    public void cancelLongPress() {
+        super.cancelLongPress();
+        spinner.cancelLongPress();
     }
 
     // Defines how to display the select answers
     private class SpinnerAdapter extends ArrayAdapter<String> {
         Context context;
-        String[] items = new String[] {};
+        String[] items = new String[]{};
         int textUnit;
         float textSize;
 
 
         public SpinnerAdapter(final Context context, final int textViewResourceId,
-                final String[] objects, int textUnit, float textSize) {
+                              final String[] objects, int textUnit, float textSize) {
             super(context, textViewResourceId, objects);
             this.items = objects;
             this.context = context;
@@ -182,19 +193,19 @@ public class SpinnerWidget extends QuestionWidget {
             TextView tv = (TextView) convertView.findViewById(android.R.id.text1);
             tv.setTextSize(textUnit, textSize);
             tv.setBackgroundColor(Color.WHITE);
-        	tv.setPadding(10, 10, 10, 10); // Are these values OK?
-            if (position == items.length-1) {
-            	tv.setText(parent.getContext().getString(R.string.clear_answer));
-            	tv.setTextColor(BROWN);
-        		tv.setTypeface(null, Typeface.NORMAL);
-            	if (spinner.getSelectedItemPosition() == position) {
-            		tv.setBackgroundColor(Color.LTGRAY);
-            	}
+            tv.setPadding(10, 10, 10, 10); // Are these values OK?
+            if (position == items.length - 1) {
+                tv.setText(parent.getContext().getString(R.string.clear_answer));
+                tv.setTextColor(BROWN);
+                tv.setTypeface(null, Typeface.NORMAL);
+                if (spinner.getSelectedItemPosition() == position) {
+                    tv.setBackgroundColor(Color.LTGRAY);
+                }
             } else {
                 tv.setText(items[position]);
                 tv.setTextColor(Color.BLACK);
-            	tv.setTypeface(null, (spinner.getSelectedItemPosition() == position) 
-            							? Typeface.BOLD : Typeface.NORMAL);
+                tv.setTypeface(null, (spinner.getSelectedItemPosition() == position)
+                        ? Typeface.BOLD : Typeface.NORMAL);
             }
             return convertView;
         }
@@ -211,27 +222,14 @@ public class SpinnerWidget extends QuestionWidget {
             tv.setText(items[position]);
             tv.setTextSize(textUnit, textSize);
             tv.setTextColor(Color.BLACK);
-        	tv.setTypeface(null, Typeface.BOLD);
-            if (position == items.length-1) {
-            	tv.setTextColor(BROWN);
-            	tv.setTypeface(null, Typeface.NORMAL);
+            tv.setTypeface(null, Typeface.BOLD);
+            if (position == items.length - 1) {
+                tv.setTextColor(BROWN);
+                tv.setTypeface(null, Typeface.NORMAL);
             }
             return convertView;
         }
 
-    }
-
-
-    @Override
-    public void setOnLongClickListener(OnLongClickListener l) {
-        spinner.setOnLongClickListener(l);
-    }
-
-
-    @Override
-    public void cancelLongPress() {
-        super.cancelLongPress();
-        spinner.cancelLongPress();
     }
 
 }

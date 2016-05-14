@@ -165,8 +165,8 @@ public class ExternalDataHandlerSearch extends ExternalDataHandlerBase {
             try {
                 c = db.query(ExternalDataUtil.EXTERNAL_DATA_TABLE_NAME, sqlColumns, selection, selectionArgs, null, null, ExternalDataUtil.SORT_COLUMN_NAME);
             } catch (Exception e) {
-                if ( c != null ) { 
-                  c.close();
+                if (c != null) {
+                    c.close();
                 }
                 c = db.query(ExternalDataUtil.EXTERNAL_DATA_TABLE_NAME, sqlColumns, selection, selectionArgs, null, null, null);
             }

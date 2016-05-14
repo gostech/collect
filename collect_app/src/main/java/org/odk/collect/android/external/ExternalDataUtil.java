@@ -18,17 +18,6 @@
 
 package org.odk.collect.android.external;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.StringTokenizer;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import org.javarosa.core.model.SelectChoice;
 import org.javarosa.core.model.condition.EvaluationContext;
 import org.javarosa.core.model.instance.FormInstance;
@@ -44,6 +33,10 @@ import org.odk.collect.android.exception.ExternalDataException;
 import org.odk.collect.android.exception.InvalidSyntaxException;
 import org.odk.collect.android.external.handler.ExternalDataHandlerSearch;
 
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /**
  * Author: Meletis Margaritis
  * Date: 30/04/13
@@ -54,11 +47,10 @@ public final class ExternalDataUtil {
     public static final String LOGGER_NAME = "ExternalData";
     public static final String EXTERNAL_DATA_TABLE_NAME = "externalData";
     public static final String SORT_COLUMN_NAME = "c_sortby";
-
+    public static final String JR_IMAGES_PREFIX = "jr://images/";
     private static final Pattern SEARCH_FUNCTION_REGEX = Pattern.compile("search\\(.+\\)");
     private static final String COLUMN_SEPARATOR = ",";
     private static final String FALLBACK_COLUMN_SEPARATOR = " ";
-    public static final String JR_IMAGES_PREFIX = "jr://images/";
 
     public static String toSafeColumnName(String columnName, Map<String, String> cache) {
         String cachedName = cache.get(columnName);
@@ -157,8 +149,8 @@ public final class ExternalDataUtil {
 
                     Object eval = xPathFuncExpr.eval(formInstance, evaluationContext);
                     if (eval.getClass().isAssignableFrom(ArrayList.class)) {
-                       @SuppressWarnings("unchecked")
-                     List<SelectChoice> dynamicChoices = (ArrayList<SelectChoice>) eval;
+                        @SuppressWarnings("unchecked")
+                        List<SelectChoice> dynamicChoices = (ArrayList<SelectChoice>) eval;
                         for (SelectChoice dynamicChoice : dynamicChoices) {
                             returnedChoices.add(dynamicChoice);
                         }

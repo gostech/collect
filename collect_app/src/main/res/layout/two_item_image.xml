@@ -4,7 +4,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:paddingStart="8dip"
-		android:paddingLeft="8dip"
+        android:paddingLeft="8dip"
         android:paddingEnd="8dip"
         android:paddingRight="8dip"
         android:paddingTop="4dip"
@@ -17,8 +17,8 @@
             android:layout_height="wrap_content"
             android:src="@drawable/ic_menu_forward"
             android:paddingTop="6dip"
-			android:paddingEnd="8dip"
-			android:paddingRight="8dip"/>
+            android:paddingEnd="8dip"
+            android:paddingRight="8dip"/>
     <TextView
             android:id="@+id/text1"
             android:layout_width="fill_parent"
@@ -48,5 +48,5 @@
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
             android:visibility="gone"
-            />
+    />
 </RelativeLayout>

@@ -30,7 +30,7 @@ import org.odk.collect.android.application.Collect;
 
 /**
  * Widget that allows user to open URLs from within the form
- * 
+ *
  * @author Yaw Anokwa (yanokwa@gmail.com)
  */
 public class UrlWidget extends QuestionWidget {
