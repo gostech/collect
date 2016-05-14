@@ -14,34 +14,29 @@
 
 package org.odk.collect.android.preferences;
 
-import java.util.ArrayList;
-
-import org.odk.collect.android.R;
-import org.odk.collect.android.utilities.UrlUtils;
-
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.EditTextPreference;
-import android.preference.ListPreference;
-import android.preference.Preference;
+import android.preference.*;
 import android.preference.Preference.OnPreferenceChangeListener;
-import android.preference.PreferenceActivity;
-import android.preference.PreferenceCategory;
 import android.text.InputFilter;
 import android.text.Spanned;
 import android.widget.Toast;
+import org.odk.collect.android.R;
+import org.odk.collect.android.utilities.UrlUtils;
+
+import java.util.ArrayList;
 
 /**
  * Handles Google specific preferences.
- * 
+ *
  * @author Carl Hartung (chartung@nafundi.com)
  */
 public class GooglePreferencesActivity extends PreferenceActivity {
 
-    private ListPreference mSelectedGoogleAccountPreference;
     protected EditTextPreference mGoogleSheetsUrlPreference;
+    private ListPreference mSelectedGoogleAccountPreference;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -54,8 +49,8 @@ public class GooglePreferencesActivity extends PreferenceActivity {
         SharedPreferences adminPreferences = getSharedPreferences(
                 AdminPreferencesActivity.ADMIN_PREFERENCES, 0);
 
-        mSelectedGoogleAccountPreference = (ListPreference)findPreference(PreferencesActivity.KEY_SELECTED_GOOGLE_ACCOUNT);
-        PreferenceCategory googlePreferences = (PreferenceCategory)findPreference(getString(R.string.google_preferences));
+        mSelectedGoogleAccountPreference = (ListPreference) findPreference(PreferencesActivity.KEY_SELECTED_GOOGLE_ACCOUNT);
+        PreferenceCategory googlePreferences = (PreferenceCategory) findPreference(getString(R.string.google_preferences));
 
         // get list of google accounts
         final Account[] accounts = AccountManager.get(getApplicationContext()).getAccountsByType(
@@ -78,10 +73,10 @@ public class GooglePreferencesActivity extends PreferenceActivity {
                 .setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
                     @Override
                     public boolean onPreferenceChange(Preference preference, Object newValue) {
-                        int index = ((ListPreference)preference).findIndexOfValue(newValue
+                        int index = ((ListPreference) preference).findIndexOfValue(newValue
                                 .toString());
-                        String value = (String)((ListPreference)preference).getEntryValues()[index];
-                        ((ListPreference)preference).setSummary(value);
+                        String value = (String) ((ListPreference) preference).getEntryValues()[index];
+                        ((ListPreference) preference).setSummary(value);
                         return true;
                     }
                 });
@@ -93,7 +88,7 @@ public class GooglePreferencesActivity extends PreferenceActivity {
             googlePreferences.removePreference(mSelectedGoogleAccountPreference);
         }
 
-        mGoogleSheetsUrlPreference = (EditTextPreference)findPreference(PreferencesActivity.KEY_GOOGLE_SHEETS_URL);
+        mGoogleSheetsUrlPreference = (EditTextPreference) findPreference(PreferencesActivity.KEY_GOOGLE_SHEETS_URL);
         mGoogleSheetsUrlPreference.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
@@ -115,21 +110,21 @@ public class GooglePreferencesActivity extends PreferenceActivity {
             }
         });
         mGoogleSheetsUrlPreference.setSummary(mGoogleSheetsUrlPreference.getText());
-        mGoogleSheetsUrlPreference.getEditText().setFilters(new InputFilter[] {
-            getReturnFilter()
+        mGoogleSheetsUrlPreference.getEditText().setFilters(new InputFilter[]{
+                getReturnFilter()
         });
 
     }
 
     /**
      * Disallows carriage returns from user entry
-     * 
+     *
      * @return
      */
     protected InputFilter getReturnFilter() {
         InputFilter returnFilter = new InputFilter() {
             public CharSequence filter(CharSequence source, int start, int end, Spanned dest,
-                    int dstart, int dend) {
+                                       int dstart, int dend) {
                 for (int i = start; i < end; i++) {
                     if (Character.getType((source.charAt(i))) == Character.CONTROL) {
                         return "";

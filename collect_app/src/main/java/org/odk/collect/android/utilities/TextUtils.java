@@ -67,7 +67,7 @@ public class TextUtils {
     }
 
     public static String createParagraphReplacement(Matcher matcher) {
-    	
+
         String line = matcher.group(1);
         String trimmed = line.trim();
         if (trimmed.matches("^<\\/?(h|p)")) {

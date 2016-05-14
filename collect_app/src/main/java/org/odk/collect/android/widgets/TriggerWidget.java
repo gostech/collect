@@ -14,38 +14,30 @@
 
 package org.odk.collect.android.widgets;
 
-import org.javarosa.core.model.data.IAnswerData;
-import org.javarosa.core.model.data.StringData;
-import org.javarosa.form.api.FormEntryPrompt;
-import org.odk.collect.android.R;
-import org.odk.collect.android.application.Collect;
-
 import android.content.Context;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.CheckBox;
-import android.widget.LinearLayout;
 import android.widget.TextView;
+import org.javarosa.core.model.data.IAnswerData;
+import org.javarosa.core.model.data.StringData;
+import org.javarosa.form.api.FormEntryPrompt;
+import org.odk.collect.android.R;
+import org.odk.collect.android.application.Collect;
 
 /**
  * Widget that allows user to scan barcodes and add them to the form.
- * 
+ *
  * @author Yaw Anokwa (yanokwa@gmail.com)
  */
 public class TriggerWidget extends QuestionWidget {
 
+    private static final String mOK = "OK";
     private CheckBox mTriggerButton;
     private TextView mStringAnswer;
-    private static final String mOK = "OK";
-
     private FormEntryPrompt mPrompt;
-
-
-    public FormEntryPrompt getPrompt() {
-        return mPrompt;
-    }
 
 
     public TriggerWidget(Context context, FormEntryPrompt prompt) {
@@ -64,12 +56,12 @@ public class TriggerWidget extends QuestionWidget {
             public void onClick(View v) {
                 if (mTriggerButton.isChecked()) {
                     mStringAnswer.setText(mOK);
-                	Collect.getInstance().getActivityLogger().logInstanceAction(TriggerWidget.this, "triggerButton", 
-                			"OK", mPrompt.getIndex());
+                    Collect.getInstance().getActivityLogger().logInstanceAction(TriggerWidget.this, "triggerButton",
+                            "OK", mPrompt.getIndex());
                 } else {
                     mStringAnswer.setText(null);
-                	Collect.getInstance().getActivityLogger().logInstanceAction(TriggerWidget.this, "triggerButton", 
-                			"null", mPrompt.getIndex());
+                    Collect.getInstance().getActivityLogger().logInstanceAction(TriggerWidget.this, "triggerButton",
+                            "null", mPrompt.getIndex());
                 }
             }
         });
@@ -94,6 +86,9 @@ public class TriggerWidget extends QuestionWidget {
         addAnswerView(mTriggerButton);
     }
 
+    public FormEntryPrompt getPrompt() {
+        return mPrompt;
+    }
 
     @Override
     public void clearAnswer() {
@@ -117,7 +112,7 @@ public class TriggerWidget extends QuestionWidget {
     public void setFocus(Context context) {
         // Hide the soft keyboard if it's showing.
         InputMethodManager inputManager =
-            (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+                (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
         inputManager.hideSoftInputFromWindow(this.getWindowToken(), 0);
     }
 

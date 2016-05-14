@@ -14,13 +14,18 @@
 
 package org.odk.collect.android.views;
 
-import java.io.Serializable;
-import java.util.*;
-
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.util.Log;
+import android.util.TypedValue;
+import android.view.Gravity;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.View.OnLongClickListener;
 import android.widget.*;
 import org.javarosa.core.model.Constants;
 import org.javarosa.core.model.FormIndex;
@@ -41,36 +46,27 @@ import org.odk.collect.android.widgets.IBinaryWidget;
 import org.odk.collect.android.widgets.QuestionWidget;
 import org.odk.collect.android.widgets.WidgetFactory;
 
-import android.content.Context;
-import android.os.Handler;
-import android.util.Log;
-import android.util.TypedValue;
-import android.view.Gravity;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.View.OnLongClickListener;
+import java.io.Serializable;
+import java.util.*;
 
 /**
  * This class is
- * 
+ *
  * @author carlhartung
  */
 public class ODKView extends ScrollView implements OnLongClickListener {
 
-	// starter random number for view IDs
-    private final static int VIEW_ID = 12345;  
-    
+    public final static String FIELD_LIST = "field-list";
+    // starter random number for view IDs
+    private final static int VIEW_ID = 12345;
     private final static String t = "ODKView";
-
     private LinearLayout mView;
     private LinearLayout.LayoutParams mLayout;
     private ArrayList<QuestionWidget> widgets;
     private Handler h = null;
-    
-    public final static String FIELD_LIST = "field-list";
 
     public ODKView(Context context, final FormEntryPrompt[] questionPrompts,
-            FormEntryCaption[] groups, boolean advancingPage) {
+                   FormEntryCaption[] groups, boolean advancingPage) {
         super(context);
 
         widgets = new ArrayList<QuestionWidget>();
@@ -81,8 +77,8 @@ public class ODKView extends ScrollView implements OnLongClickListener {
         mView.setPadding(0, 7, 0, 0);
 
         mLayout =
-            new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT);
+                new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT);
         mLayout.setMargins(10, 0, 10, 0);
 
         // display which group you are in as well as the question
@@ -184,7 +180,7 @@ public class ODKView extends ScrollView implements OnLongClickListener {
 
             // if question or answer type is not supported, use text widget
             QuestionWidget qw =
-                WidgetFactory.createWidgetFromPrompt(p, getContext(), readOnlyOverride);
+                    WidgetFactory.createWidgetFromPrompt(p, getContext(), readOnlyOverride);
             qw.setLongClickable(true);
             qw.setOnLongClickListener(this);
             qw.setId(VIEW_ID + id++);
@@ -199,37 +195,37 @@ public class ODKView extends ScrollView implements OnLongClickListener {
 
         // see if there is an autoplay option. 
         // Only execute it during forward swipes through the form 
-        if ( advancingPage && widgets.size() == 1 ) {
-	        final String playOption = widgets.get(0).getPrompt().getFormElement().getAdditionalAttribute(null, "autoplay");
-	        if ( playOption != null ) {
-	        	h = new Handler();
-	        	h.postDelayed(new Runnable() {
-						@Override
-						public void run() {
-				        	if ( playOption.equalsIgnoreCase("audio") ) {
-				        		widgets.get(0).playAudio();
-				        	} else if ( playOption.equalsIgnoreCase("video") ) {
-				        		widgets.get(0).playVideo();
-				        	}
-						}
-					}, 150);
-	        }
+        if (advancingPage && widgets.size() == 1) {
+            final String playOption = widgets.get(0).getPrompt().getFormElement().getAdditionalAttribute(null, "autoplay");
+            if (playOption != null) {
+                h = new Handler();
+                h.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (playOption.equalsIgnoreCase("audio")) {
+                            widgets.get(0).playAudio();
+                        } else if (playOption.equalsIgnoreCase("video")) {
+                            widgets.get(0).playVideo();
+                        }
+                    }
+                }, 150);
+            }
         }
     }
-    
+
     /**
      * http://code.google.com/p/android/issues/detail?id=8488
      */
     public void recycleDrawables() {
-    	this.destroyDrawingCache();
-    	mView.destroyDrawingCache();
-    	for ( QuestionWidget q : widgets ) {
-    		q.recycleDrawables();
-    	}
+        this.destroyDrawingCache();
+        mView.destroyDrawingCache();
+        for (QuestionWidget q : widgets) {
+            q.recycleDrawables();
+        }
     }
-    
+
     protected void onScrollChanged(int l, int t, int oldl, int oldt) {
-    	Collect.getInstance().getActivityLogger().logScrollAction(this, t - oldt);
+        Collect.getInstance().getActivityLogger().logScrollAction(this, t - oldt);
     }
 
     /**
@@ -293,7 +289,7 @@ public class ODKView extends ScrollView implements OnLongClickListener {
 
     /**
      * Called when another activity returns information to answer this question.
-     * 
+     *
      * @param answer
      */
     public void setBinaryData(Object answer) {
@@ -349,7 +345,7 @@ public class ODKView extends ScrollView implements OnLongClickListener {
             }
         }
     }
-    
+
     public void cancelWaitingForBinaryData() {
         int count = 0;
         for (QuestionWidget q : widgets) {
@@ -368,9 +364,9 @@ public class ODKView extends ScrollView implements OnLongClickListener {
 
     public boolean suppressFlingGesture(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
         for (QuestionWidget q : widgets) {
-        	if ( q.suppressFlingGesture(e1, e2, velocityX, velocityY) ) {
-        		return true;
-        	}
+            if (q.suppressFlingGesture(e1, e2, velocityX, velocityY)) {
+                return true;
+            }
         }
         return false;
     }
@@ -408,7 +404,7 @@ public class ODKView extends ScrollView implements OnLongClickListener {
     public boolean onLongClick(View v) {
         return false;
     }
-    
+
 
     @Override
     public void cancelLongPress() {
@@ -417,7 +413,7 @@ public class ODKView extends ScrollView implements OnLongClickListener {
             qw.cancelLongPress();
         }
     }
-    
+
     public void stopAudio() {
         widgets.get(0).stopAudio();
     }

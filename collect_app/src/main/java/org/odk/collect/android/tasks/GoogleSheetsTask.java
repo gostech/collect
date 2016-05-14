@@ -14,16 +14,14 @@
 
 package org.odk.collect.android.tasks;
 
-import java.io.IOException;
-
-import org.odk.collect.android.listeners.InstanceUploaderListener;
-
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
-
 import com.google.android.gms.auth.GoogleAuthException;
 import com.google.android.gms.auth.GoogleAuthUtil;
+import org.odk.collect.android.listeners.InstanceUploaderListener;
+
+import java.io.IOException;
 
 /**
  * @author carlhartung (chartung@nafundi.com)
@@ -31,11 +29,9 @@ import com.google.android.gms.auth.GoogleAuthUtil;
 public abstract class GoogleSheetsTask<Params, Progress, Result> extends
         AsyncTask<Params, Progress, Result> {
 
-    private final static String tag = "GoogleSheetsTask";
-
     public final static int PLAYSTORE_REQUEST_CODE = 55551;
     public final static int USER_RECOVERABLE_REQUEST_CODE = 55552;
-
+    private final static String tag = "GoogleSheetsTask";
     protected String mGoogleUserName = null;
     protected InstanceUploaderListener mStateListener;
 

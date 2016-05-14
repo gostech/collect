@@ -14,9 +14,6 @@
 
 package org.odk.collect.android.activities;
 
-import org.odk.collect.android.R;
-import org.odk.collect.android.application.Collect;
-
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -26,19 +23,18 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import org.odk.collect.android.R;
+import org.odk.collect.android.application.Collect;
 
 import java.util.Locale;
 
 public class BearingActivity extends Activity implements SensorEventListener {
+    private static float[] mAccelerometer = null;
+    private static float[] mGeomagnetic = null;
     private ProgressDialog mBearingDialog;
-
     private SensorManager mSensorManager;
     private Sensor accelerometer;
     private Sensor magnetometer;
-
-    private static float[] mAccelerometer = null;
-    private static float[] mGeomagnetic = null;
-
     private String mBearingDecimal = null;
     private String mBearing = null;
 

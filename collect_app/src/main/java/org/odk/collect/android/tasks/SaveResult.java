@@ -19,7 +19,6 @@
 package org.odk.collect.android.tasks;
 
 /**
- *
  * Author: Meletis Margaritis
  * Date: 15/3/2013
  * Time: 2:53 μμ
@@ -37,11 +36,11 @@ public class SaveResult {
         this.saveResult = saveResult;
     }
 
-    public void setSaveErrorMessage(String saveErrorMessage) {
-        this.saveErrorMessage = saveErrorMessage;
-    }
-
     public String getSaveErrorMessage() {
         return saveErrorMessage;
+    }
+
+    public void setSaveErrorMessage(String saveErrorMessage) {
+        this.saveErrorMessage = saveErrorMessage;
     }
 }

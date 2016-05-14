@@ -14,19 +14,6 @@
 
 package org.odk.collect.android.widgets;
 
-import java.util.Map;
-
-import android.view.ViewGroup;
-import android.widget.*;
-import org.javarosa.core.model.data.IAnswerData;
-import org.javarosa.core.model.data.StringData;
-import org.javarosa.form.api.FormEntryPrompt;
-import org.odk.collect.android.R;
-import org.odk.collect.android.activities.FormEntryActivity;
-import org.odk.collect.android.application.Collect;
-import org.odk.collect.android.exception.ExternalParamsException;
-import org.odk.collect.android.external.ExternalAppsUtils;
-
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
@@ -39,22 +26,33 @@ import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.*;
+import org.javarosa.core.model.data.IAnswerData;
+import org.javarosa.core.model.data.StringData;
+import org.javarosa.form.api.FormEntryPrompt;
+import org.odk.collect.android.R;
+import org.odk.collect.android.activities.FormEntryActivity;
+import org.odk.collect.android.application.Collect;
+import org.odk.collect.android.exception.ExternalParamsException;
+import org.odk.collect.android.external.ExternalAppsUtils;
+
+import java.util.Map;
 
 
 /**
  * <p>Launch an external app to supply a string value. If the app
  * does not launch, enable the text area for regular data entry.</p>
- *
+ * <p>
  * <p>The default button text is "Launch"
- *
+ * <p>
  * <p>You may override the button text and the error text that is
  * displayed when the app is missing by using jr:itext() values.
- *
+ * <p>
  * <p>To use this widget, define an appearance on the &lt;input/&gt;
  * tag that begins "ex:" and then contains the intent action to lauch.
- *
+ * <p>
  * <p>e.g.,
- *
+ * <p>
  * <pre>
  * &lt;input appearance="ex:change.uw.android.TEXTANSWER" ref="/form/passPhrase" &gt;
  * </pre>
@@ -81,17 +79,14 @@ import android.view.inputmethod.InputMethodManager;
  * </pre>
  *
  * @author mitchellsundt@gmail.com
- *
  */
 public class ExStringWidget extends QuestionWidget implements IBinaryWidget {
 
     private final String t = getClass().getName();
-
+    protected EditText mAnswer;
     private boolean mHasExApp = true;
     private Button mLaunchIntentButton;
     private Drawable mTextBackground;
-
-    protected EditText mAnswer;
 
     public ExStringWidget(Context context, FormEntryPrompt prompt) {
         super(context, prompt);
@@ -120,7 +115,7 @@ public class ExStringWidget extends QuestionWidget implements IBinaryWidget {
         }
 
         if (mPrompt.isReadOnly()) {
-        	mAnswer.setBackgroundDrawable(null);
+            mAnswer.setBackgroundDrawable(null);
         }
 
         if (mPrompt.isReadOnly() || mHasExApp) {
@@ -134,10 +129,10 @@ public class ExStringWidget extends QuestionWidget implements IBinaryWidget {
         final Map<String, String> exParams = ExternalAppsUtils.extractParameters(attrs[1]);
         final String buttonText;
         final String errorString;
-    	String v = mPrompt.getSpecialFormQuestionText("buttonText");
-    	buttonText = (v != null) ? v : context.getString(R.string.launch_app);
-    	v = mPrompt.getSpecialFormQuestionText("noAppErrorString");
-    	errorString = (v != null) ? v : context.getString(R.string.no_app);
+        String v = mPrompt.getSpecialFormQuestionText("buttonText");
+        buttonText = (v != null) ? v : context.getString(R.string.launch_app);
+        v = mPrompt.getSpecialFormQuestionText("noAppErrorString");
+        errorString = (v != null) ? v : context.getString(R.string.no_app);
 
         // set button formatting
         mLaunchIntentButton = new Button(getContext());
@@ -156,7 +151,7 @@ public class ExStringWidget extends QuestionWidget implements IBinaryWidget {
                     ExternalAppsUtils.populateParameters(i, exParams, mPrompt.getIndex().getReference());
 
                     Collect.getInstance().getFormController().setIndexWaitingForData(mPrompt.getIndex());
-                	fireActivity(i);
+                    fireActivity(i);
                 } catch (ExternalParamsException e) {
                     Log.e(t, e.getMessage(), e);
                     onException(e.getMessage());
@@ -168,7 +163,7 @@ public class ExStringWidget extends QuestionWidget implements IBinaryWidget {
 
             private void onException(String toastText) {
                 mHasExApp = false;
-                if ( !mPrompt.isReadOnly() ) {
+                if (!mPrompt.isReadOnly()) {
                     mAnswer.setBackgroundDrawable(mTextBackground);
                     mAnswer.setFocusable(true);
                     mAnswer.setFocusableInTouchMode(true);
@@ -193,16 +188,16 @@ public class ExStringWidget extends QuestionWidget implements IBinaryWidget {
     }
 
     protected void fireActivity(Intent i) throws ActivityNotFoundException {
-    	i.putExtra("value", mPrompt.getAnswerText());
-       	Collect.getInstance().getActivityLogger().logInstanceAction(this, "launchIntent",
-    			i.getAction(), mPrompt.getIndex());
+        i.putExtra("value", mPrompt.getAnswerText());
+        Collect.getInstance().getActivityLogger().logInstanceAction(this, "launchIntent",
+                i.getAction(), mPrompt.getIndex());
         ((Activity) getContext()).startActivityForResult(i,
                 FormEntryActivity.EX_STRING_CAPTURE);
     }
 
     @Override
     public void clearAnswer() {
-    	mAnswer.setText(null);
+        mAnswer.setText(null);
     }
 
 
@@ -224,25 +219,25 @@ public class ExStringWidget extends QuestionWidget implements IBinaryWidget {
     public void setBinaryData(Object answer) {
         StringData stringData = ExternalAppsUtils.asStringData(answer);
         mAnswer.setText(stringData == null ? null : stringData.getValue().toString());
-    	Collect.getInstance().getFormController().setIndexWaitingForData(null);
+        Collect.getInstance().getFormController().setIndexWaitingForData(null);
     }
 
     @Override
     public void setFocus(Context context) {
         // Put focus on text input field and display soft keyboard if appropriate.
         InputMethodManager inputManager =
-            (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-    	if ( mHasExApp ) {
-    		// hide keyboard
+                (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (mHasExApp) {
+            // hide keyboard
             inputManager.hideSoftInputFromWindow(mAnswer.getWindowToken(), 0);
             // focus on launch button
             mLaunchIntentButton.requestFocus();
-    	} else {
+        } else {
             if (!mPrompt.isReadOnly()) {
-	            mAnswer.requestFocus();
-	            inputManager.showSoftInput(mAnswer, 0);
-	            /*
-	             * If you do a multi-question screen after a "add another group" dialog, this won't
+                mAnswer.requestFocus();
+                inputManager.showSoftInput(mAnswer, 0);
+                /*
+                 * If you do a multi-question screen after a "add another group" dialog, this won't
 	             * automatically pop up. It's an Android issue.
 	             *
 	             * That is, if I have an edit text in an activity, and pop a dialog, and in that
@@ -250,10 +245,10 @@ public class ExStringWidget extends QuestionWidget implements IBinaryWidget {
 	             * showSoftInput(edittext, 0), showSoftinput() returns false. However, if the edittext
 	             * is focused before the dialog pops up, everything works fine. great.
 	             */
-	        } else {
-	            inputManager.hideSoftInputFromWindow(mAnswer.getWindowToken(), 0);
-	        }
-    	}
+            } else {
+                inputManager.hideSoftInputFromWindow(mAnswer.getWindowToken(), 0);
+            }
+        }
     }
 
 
@@ -262,10 +257,10 @@ public class ExStringWidget extends QuestionWidget implements IBinaryWidget {
         return mPrompt.getIndex().equals(Collect.getInstance().getFormController().getIndexWaitingForData());
     }
 
-	@Override
-	public void cancelWaitingForBinaryData() {
-    	Collect.getInstance().getFormController().setIndexWaitingForData(null);
-	}
+    @Override
+    public void cancelWaitingForBinaryData() {
+        Collect.getInstance().getFormController().setIndexWaitingForData(null);
+    }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -277,7 +272,7 @@ public class ExStringWidget extends QuestionWidget implements IBinaryWidget {
 
     @Override
     public void setOnLongClickListener(OnLongClickListener l) {
-    	mAnswer.setOnLongClickListener(l);
+        mAnswer.setOnLongClickListener(l);
         mLaunchIntentButton.setOnLongClickListener(l);
     }
 

@@ -20,19 +20,6 @@
 
 package org.odk.collect.android.activities;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Set;
-
-import org.odk.collect.android.R;
-import org.odk.collect.android.application.Collect;
-import org.odk.collect.android.listeners.InstanceUploaderListener;
-import org.odk.collect.android.preferences.PreferencesActivity;
-import org.odk.collect.android.provider.InstanceProviderAPI.InstanceColumns;
-import org.odk.collect.android.tasks.GoogleSheetsAbstractUploader;
-import org.odk.collect.android.tasks.GoogleSheetsTask;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -45,11 +32,22 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
-
 import com.google.android.gms.auth.GoogleAuthException;
 import com.google.android.gms.auth.GooglePlayServicesAvailabilityException;
 import com.google.android.gms.auth.UserRecoverableAuthException;
 import com.google.android.gms.common.GooglePlayServicesUtil;
+import org.odk.collect.android.R;
+import org.odk.collect.android.application.Collect;
+import org.odk.collect.android.listeners.InstanceUploaderListener;
+import org.odk.collect.android.preferences.PreferencesActivity;
+import org.odk.collect.android.provider.InstanceProviderAPI.InstanceColumns;
+import org.odk.collect.android.tasks.GoogleSheetsAbstractUploader;
+import org.odk.collect.android.tasks.GoogleSheetsTask;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Set;
 
 public class GoogleSheetsUploaderActivity extends Activity implements InstanceUploaderListener {
     private final static String tag = "GoogleSheetsUploaderActivity";
@@ -121,7 +119,7 @@ public class GoogleSheetsUploaderActivity extends Activity implements InstanceUp
     }
 
     private void runTask() {
-        mUlTask = (GoogleSheetsInstanceUploaderTask)getLastNonConfigurationInstance();
+        mUlTask = (GoogleSheetsInstanceUploaderTask) getLastNonConfigurationInstance();
         if (mUlTask == null) {
             mUlTask = new GoogleSheetsInstanceUploaderTask();
 
@@ -354,6 +352,11 @@ public class GoogleSheetsUploaderActivity extends Activity implements InstanceUp
         mAlertDialog.show();
     }
 
+    @Override
+    public void authRequest(Uri url, HashMap<String, String> doneSoFar) {
+        // in interface, but not needed
+    }
+
     public class GoogleSheetsInstanceUploaderTask extends
             GoogleSheetsAbstractUploader<Long, Integer, HashMap<String, String>> {
 
@@ -410,11 +413,6 @@ public class GoogleSheetsUploaderActivity extends Activity implements InstanceUp
             uploadInstances(selection, selectionArgs, token);
             return mResults;
         }
-    }
-
-    @Override
-    public void authRequest(Uri url, HashMap<String, String> doneSoFar) {
-        // in interface, but not needed
     }
 
 }

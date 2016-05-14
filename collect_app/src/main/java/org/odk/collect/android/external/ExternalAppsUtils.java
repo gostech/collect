@@ -18,11 +18,8 @@
 
 package org.odk.collect.android.external;
 
-import java.io.Serializable;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.Map;
-
+import android.content.Intent;
+import android.database.Cursor;
 import org.javarosa.core.model.condition.EvaluationContext;
 import org.javarosa.core.model.data.DecimalData;
 import org.javarosa.core.model.data.IntegerData;
@@ -39,11 +36,12 @@ import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.exception.ExternalParamsException;
 import org.odk.collect.android.provider.InstanceProviderAPI.InstanceColumns;
 
-import android.content.Intent;
-import android.database.Cursor;
+import java.io.Serializable;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
- *
  * Author: Meletis Margaritis
  * Date: 30/07/13
  * Time: 10:44
@@ -122,7 +120,7 @@ public class ExternalAppsUtils {
                         String path = Collect.getInstance().getFormController().getInstancePath().getAbsolutePath();
                         String selection = InstanceColumns.INSTANCE_FILE_PATH + "=?";
                         String selectionArgs[] = {path};
-                        
+
                         String instanceProviderID = "-1";
                         Cursor c = Collect.getInstance().getContentResolver().query(InstanceColumns.CONTENT_URI, null, selection, selectionArgs, null);
                         if (c != null && c.getCount() > 0) {
@@ -133,7 +131,7 @@ public class ExternalAppsUtils {
                         if (c != null) {
                             c.close();
                         }
-                       
+
                         result = instanceProviderID;
                     } else {
                         // treat this is a function
