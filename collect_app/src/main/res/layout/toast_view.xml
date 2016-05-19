@@ -26,6 +26,6 @@ the License.
             android:layout_height="wrap_content"
             android:textSize="21sp"
             android:textColor="@drawable/white"
-    />
+            />
 
 </LinearLayout>

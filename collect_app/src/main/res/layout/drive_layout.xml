@@ -35,6 +35,7 @@ the License.
                 android:padding="12dp"
                 android:textSize="16sp"
                 android:layout_weight="1"/>
+
         <Button
                 android:id="@+id/download_button"
                 android:text="Download Selected"
@@ -44,6 +45,7 @@ the License.
                 android:textSize="16sp"
                 android:layout_weight="1"
                 android:enabled="false"/>
+
         <Button
                 android:id="@+id/root_button"
                 android:text="@string/go_shared"
@@ -94,7 +96,7 @@ the License.
             android:layout_height="fill_parent"
             android:layout_below="@+id/searchholder"
             android:layout_above="@+id/buttonholder"
-    />
+            />
 
     <TextView
             android:id="@android:id/empty"

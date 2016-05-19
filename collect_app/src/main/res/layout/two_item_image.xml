@@ -19,6 +19,7 @@
             android:paddingTop="6dip"
             android:paddingEnd="8dip"
             android:paddingRight="8dip"/>
+
     <TextView
             android:id="@+id/text1"
             android:layout_width="fill_parent"
@@ -28,6 +29,7 @@
             android:layout_toRightOf="@+id/image"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="text1"/>
+
     <TextView
             android:id="@+id/text2"
             android:layout_width="fill_parent"
@@ -48,5 +50,5 @@
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
             android:visibility="gone"
-    />
+            />
 </RelativeLayout>
