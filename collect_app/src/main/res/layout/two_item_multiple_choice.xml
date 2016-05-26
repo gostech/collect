@@ -18,6 +18,7 @@
         android:paddingTop="4dip"
         android:paddingBottom="8dip"
         android:minHeight="?android:attr/listPreferredItemHeight">
+
     <TextView
             android:id="@+id/text1"
             android:layout_width="fill_parent"
@@ -27,6 +28,7 @@
             android:layout_alignParentLeft="true"
             android:text="text1"
             android:textAppearance="?android:attr/textAppearanceLarge"/>
+
     <TextView
             android:id="@+id/text2"
             android:layout_width="fill_parent"
@@ -36,6 +38,7 @@
             android:layout_alignParentLeft="true"
             android:text="text2"
             android:textAppearance="?android:attr/textAppearanceSmall"/>
+
     <CheckBox
             android:id="@+id/checkbox"
             android:layout_width="wrap_content"
