@@ -61,13 +61,14 @@
     <PreferenceCategory
             android:key="@string/client"
             android:title="@string/client">
-        <ListPreference android:id="@+id/constraint_behavior"
-                        android:defaultValue="on_swipe"
-                        android:dialogTitle="@string/constraint_behavior"
-                        android:entries="@array/constraint_behavior_entries"
-                        android:entryValues="@array/constraint_behavior_entry_values"
-                        android:key="constraint_behavior"
-                        android:title="@string/constraint_behavior"/>
+        <ListPreference
+                android:id="@+id/constraint_behavior"
+                android:defaultValue="on_swipe"
+                android:dialogTitle="@string/constraint_behavior"
+                android:entries="@array/constraint_behavior_entries"
+                android:entryValues="@array/constraint_behavior_entry_values"
+                android:key="constraint_behavior"
+                android:title="@string/constraint_behavior"/>
         <ListPreference
                 android:id="@+id/navigation"
                 android:defaultValue="swipe"
