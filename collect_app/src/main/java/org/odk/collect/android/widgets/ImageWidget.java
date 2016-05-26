@@ -36,7 +36,7 @@ import org.odk.collect.android.R;
 import org.odk.collect.android.activities.FormEntryActivity;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.utilities.FileUtils;
-import org.odk.collect.android.utilities.ImageUtils;
+//import org.odk.collect.android.utilities.ImageUtils;
 import org.odk.collect.android.utilities.MediaUtils;
 
 import java.io.File;
@@ -261,11 +261,6 @@ public class ImageWidget extends QuestionWidget implements IBinaryWidget {
 
         File newImage = (File) newImageObj;
         if (newImage.exists()) {
-            int rotationAmount = ImageUtils.getRotationAmount(newImage);
-            if (rotationAmount != 0) {
-                ImageUtils.rotateImage((File) newImageObj, rotationAmount);
-            }
-
             // Add the new image to the Media content provider so that the
             // viewing is fast in Android 2.0+
             ContentValues values = new ContentValues(6);
