@@ -9,7 +9,8 @@
 	the specific language governing permissions and limitations under the License.
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="org.odk.collect.android">
+    xmlns:tools="http://schemas.android.com/tools"
+    package="org.odk.collect.android">
 
     <uses-feature
             android:name="android.hardware.location"
@@ -98,7 +99,7 @@
                 android:configChanges="orientation"
                 android:label="@string/app_name"
                 android:windowSoftInputMode="adjustResize">
-            <intent-filter>
+            <intent-filter tools:ignore="AppLinkUrlError">
                 <action android:name="android.intent.action.VIEW"/>
                 <action android:name="android.intent.action.EDIT"/>
 
@@ -127,14 +128,14 @@
                 android:name=".activities.InstanceChooserList"
                 android:label="@string/app_name"/>
 
-        <intent-filter>
-            <action android:name="android.intent.action.VIEW"/>
-            <action android:name="android.intent.action.EDIT"/>
+        <!--<intent-filter>-->
+            <!--<action android:name="android.intent.action.VIEW"/>-->
+            <!--<action android:name="android.intent.action.EDIT"/>-->
 
-            <category android:name="android.intent.category.DEFAULT"/>
+            <!--<category android:name="android.intent.category.DEFAULT"/>-->
 
-            <data android:mimeType="vnd.android.cursor.dir/vnd.odk.instance"/>
-        </intent-filter>
+            <!--<data android:mimeType="vnd.android.cursor.dir/vnd.odk.instance"/>-->
+        <!--</intent-filter>-->
 
         <activity
                 android:name=".activities.InstanceChooserTabs"
@@ -142,7 +143,7 @@
         <activity
                 android:name=".activities.FormChooserList"
                 android:label="@string/app_name">
-            <intent-filter>
+            <intent-filter tools:ignore="AppLinkUrlError">
                 <action android:name="android.intent.action.VIEW"/>
                 <action android:name="android.intent.action.EDIT"/>
                 <action android:name="android.intent.action.PICK"/>
@@ -201,9 +202,9 @@
         <activity
                 android:name=".activities.GeoPointActivity"
                 android:label="@string/app_name"/>
-        <activity
-                android:name=".activities.GeoPointMapActivity"
-                android:label="@string/app_name"/>
+        <!--<activity-->
+                <!--android:name=".activities.GeoPointMapActivity"-->
+                <!--android:label="@string/app_name"/>-->
         <activity
                 android:name=".activities.GeoPointMapNotDraggableActivity"
                 android:label="@string/app_name"/>
