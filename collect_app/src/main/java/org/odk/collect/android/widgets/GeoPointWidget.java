@@ -25,13 +25,13 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TextView;
+
 import org.javarosa.core.model.data.GeoPointData;
 import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.form.api.FormEntryPrompt;
 import org.odk.collect.android.R;
 import org.odk.collect.android.activities.FormEntryActivity;
 import org.odk.collect.android.activities.GeoPointActivity;
-import org.odk.collect.android.activities.GeoPointMapActivity;
 import org.odk.collect.android.activities.GeoPointMapNotDraggableActivity;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.utilities.CompatibilityUtils;
@@ -134,7 +134,7 @@ public class GeoPointWidget extends QuestionWidget implements IBinaryWidget {
 
                 Intent i;
                 if (mUseMapsV2) {
-                    i = new Intent(getContext(), GeoPointMapActivity.class);
+                    //i = new Intent(getContext(), GeoPointMapActivity.class);
                 } else {
                     i = new Intent(getContext(), GeoPointMapNotDraggableActivity.class);
                 }
@@ -147,11 +147,11 @@ public class GeoPointWidget extends QuestionWidget implements IBinaryWidget {
                     gp[1] = Double.valueOf(sa[1]).doubleValue();
                     gp[2] = Double.valueOf(sa[2]).doubleValue();
                     gp[3] = Double.valueOf(sa[3]).doubleValue();
-                    i.putExtra(LOCATION, gp);
+                    //i.putExtra(LOCATION, gp);
                 }
-                i.putExtra(READ_ONLY, true);
-                i.putExtra(ACCURACY_THRESHOLD, mAccuracyThreshold);
-                ((Activity) getContext()).startActivity(i);
+                //i.putExtra(READ_ONLY, true);
+                //i.putExtra(ACCURACY_THRESHOLD, mAccuracyThreshold);
+                //((Activity) getContext()).startActivity(i);
 
             }
         });
@@ -174,7 +174,7 @@ public class GeoPointWidget extends QuestionWidget implements IBinaryWidget {
                                 mPrompt.getIndex());
                 Intent i = null;
                 if (mUseMapsV2) {
-                    i = new Intent(getContext(), GeoPointMapActivity.class);
+                    //i = new Intent(getContext(), GeoPointMapActivity.class);
                 } else if (mUseMaps) {
                     i = new Intent(getContext(), GeoPointMapNotDraggableActivity.class);
                 } else {

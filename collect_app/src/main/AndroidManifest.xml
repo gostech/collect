@@ -9,9 +9,7 @@
 	the specific language governing permissions and limitations under the License.
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="org.odk.collect.android"
-          android:versionCode="1058"
-          android:versionName="1.4.8">
+          package="org.odk.collect.android">
 
     <uses-feature
             android:name="android.hardware.location"
@@ -54,10 +52,6 @@
     <uses-permission android:name="org.odk.collect.android.permission.MAPS_RECEIVE"/>
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES"/>
 
-    <uses-sdk
-            android:minSdkVersion="13"
-            android:targetSdkVersion="13"/>
-
     <supports-screens
             android:anyDensity="true"
             android:xlargeScreens="true"
@@ -83,6 +77,16 @@
                 android:exported="true"
                 android:name="org.odk.collect.android.provider.InstanceProvider"
                 android:authorities="org.odk.collect.android.provider.odk.instances"/>
+
+        <provider
+            android:authorities="${applicationId}.provider"
+            android:name="android.support.v4.content.FileProvider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths" />
+        </provider>
 
         <activity
                 android:name=".activities.MainMenuActivity"

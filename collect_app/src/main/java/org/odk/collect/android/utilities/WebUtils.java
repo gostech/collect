@@ -19,7 +19,6 @@ import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.text.format.DateFormat;
 import android.util.Log;
-import org.apache.http.HttpStatus;
 import org.kxml2.io.KXmlParser;
 import org.kxml2.kdom.Document;
 import org.odk.collect.android.R;

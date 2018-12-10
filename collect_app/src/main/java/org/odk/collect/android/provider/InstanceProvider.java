@@ -17,6 +17,7 @@ package org.odk.collect.android.provider;
 import android.content.ContentProvider;
 import android.content.ContentUris;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.SQLException;
@@ -25,6 +26,7 @@ import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.text.TextUtils;
 import android.util.Log;
+
 import org.odk.collect.android.R;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.database.ODKSQLiteOpenHelper;
@@ -72,7 +74,7 @@ public class InstanceProvider extends ContentProvider {
 
     private DatabaseHelper mDbHelper;
 
-    private DatabaseHelper getDbHelper() {
+    private DatabaseHelper getDbHelper(Context context) {
         // wrapper to test and reset/set the dbHelper based upon the attachment state of the device.
         try {
             Collect.createODKDirs();
@@ -91,7 +93,7 @@ public class InstanceProvider extends ContentProvider {
     @Override
     public boolean onCreate() {
         // must be at the beginning of any activity that can be called from an external intent
-        DatabaseHelper h = getDbHelper();
+        DatabaseHelper h = getDbHelper(getContext());
         if (h == null) {
             return false;
         }
@@ -120,7 +122,7 @@ public class InstanceProvider extends ContentProvider {
         }
 
         // Get the database and run the query
-        SQLiteDatabase db = getDbHelper().getReadableDatabase();
+        SQLiteDatabase db = getDbHelper(getContext()).getReadableDatabase();
         Cursor c = qb.query(db, projection, selection, selectionArgs, null, null, sortOrder);
 
         // Tell the cursor what uri to watch, so it knows when its source data changes
@@ -175,7 +177,7 @@ public class InstanceProvider extends ContentProvider {
             values.put(InstanceColumns.STATUS, InstanceProviderAPI.STATUS_INCOMPLETE);
         }
 
-        SQLiteDatabase db = getDbHelper().getWritableDatabase();
+        SQLiteDatabase db = getDbHelper(getContext()).getWritableDatabase();
         long rowId = db.insert(INSTANCES_TABLE_NAME, null, values);
         if (rowId > 0) {
             Uri instanceUri = ContentUris.withAppendedId(InstanceColumns.CONTENT_URI, rowId);
@@ -239,7 +241,7 @@ public class InstanceProvider extends ContentProvider {
      */
     @Override
     public int delete(Uri uri, String where, String[] whereArgs) {
-        SQLiteDatabase db = getDbHelper().getWritableDatabase();
+        SQLiteDatabase db = getDbHelper(getContext()).getWritableDatabase();
         int count;
 
         switch (sUriMatcher.match(uri)) {
@@ -303,7 +305,7 @@ public class InstanceProvider extends ContentProvider {
 
     @Override
     public int update(Uri uri, ContentValues values, String where, String[] whereArgs) {
-        SQLiteDatabase db = getDbHelper().getWritableDatabase();
+        SQLiteDatabase db = getDbHelper(getContext()).getWritableDatabase();
 
         Long now = Long.valueOf(System.currentTimeMillis());
 

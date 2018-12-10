@@ -29,6 +29,7 @@ import org.odk.collect.android.preferences.PreferencesActivity;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.UUID;
 
 /**
  * Used to return device properties to JavaRosa
@@ -64,7 +65,7 @@ public class PropertyManager implements IPropertyManager {
         mProperties = new HashMap<String, String>();
         mTelephonyManager = (TelephonyManager) mContext.getSystemService(Context.TELEPHONY_SERVICE);
 
-        String deviceId = mTelephonyManager.getDeviceId();
+        String deviceId = UUID.randomUUID().toString();
         String orDeviceId = null;
         if (deviceId != null) {
             if ((deviceId.contains("*") || deviceId.contains("000000000000000"))) {
@@ -103,17 +104,17 @@ public class PropertyManager implements IPropertyManager {
 
         String value;
 
-        value = mTelephonyManager.getSubscriberId();
+        value = UUID.randomUUID().toString();
         if (value != null) {
             mProperties.put(SUBSCRIBER_ID_PROPERTY, value);
             mProperties.put(OR_SUBSCRIBER_ID_PROPERTY, "imsi:" + value);
         }
-        value = mTelephonyManager.getSimSerialNumber();
+        value = UUID.randomUUID().toString();
         if (value != null) {
             mProperties.put(SIM_SERIAL_PROPERTY, value);
             mProperties.put(OR_SIM_SERIAL_PROPERTY, "simserial:" + value);
         }
-        value = mTelephonyManager.getLine1Number();
+        value = UUID.randomUUID().toString();
         if (value != null) {
             mProperties.put(PHONE_NUMBER_PROPERTY, value);
             mProperties.put(OR_PHONE_NUMBER_PROPERTY, "tel:" + value);

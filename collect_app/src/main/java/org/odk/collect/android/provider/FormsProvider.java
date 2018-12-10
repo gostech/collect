@@ -17,6 +17,7 @@ package org.odk.collect.android.provider;
 import android.content.ContentProvider;
 import android.content.ContentUris;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.SQLException;
@@ -25,6 +26,7 @@ import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.text.TextUtils;
 import android.util.Log;
+
 import org.odk.collect.android.R;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.database.ItemsetDbAdapter;
@@ -88,7 +90,7 @@ public class FormsProvider extends ContentProvider {
 
     private DatabaseHelper mDbHelper;
 
-    private DatabaseHelper getDbHelper() {
+    private DatabaseHelper getDbHelper(Context context) {
         // wrapper to test and reset/set the dbHelper based upon the attachment state of the device.
         try {
             Collect.createODKDirs();
@@ -107,7 +109,7 @@ public class FormsProvider extends ContentProvider {
     @Override
     public boolean onCreate() {
         // must be at the beginning of any activity that can be called from an external intent
-        DatabaseHelper h = getDbHelper();
+        DatabaseHelper h = getDbHelper(getContext());
         if (h == null) {
             return false;
         }
@@ -136,7 +138,7 @@ public class FormsProvider extends ContentProvider {
         }
 
         // Get the database and run the query
-        SQLiteDatabase db = getDbHelper().getReadableDatabase();
+        SQLiteDatabase db = getDbHelper(getContext()).getReadableDatabase();
         Cursor c = qb.query(db, projection, selection, selectionArgs, null,
                 null, sortOrder);
 
@@ -224,7 +226,7 @@ public class FormsProvider extends ContentProvider {
             values.put(FormsColumns.FORM_MEDIA_PATH, mediaPath);
         }
 
-        SQLiteDatabase db = getDbHelper().getWritableDatabase();
+        SQLiteDatabase db = getDbHelper(getContext()).getWritableDatabase();
 
         // first try to see if a record with this filename already exists...
         String[] projection = {FormsColumns._ID, FormsColumns.FORM_FILE_PATH};
@@ -299,7 +301,7 @@ public class FormsProvider extends ContentProvider {
      */
     @Override
     public int delete(Uri uri, String where, String[] whereArgs) {
-        SQLiteDatabase db = getDbHelper().getWritableDatabase();
+        SQLiteDatabase db = getDbHelper(getContext()).getWritableDatabase();
         int count;
 
         switch (sUriMatcher.match(uri)) {
@@ -391,7 +393,7 @@ public class FormsProvider extends ContentProvider {
     @Override
     public int update(Uri uri, ContentValues values, String where,
                       String[] whereArgs) {
-        SQLiteDatabase db = getDbHelper().getWritableDatabase();
+        SQLiteDatabase db = getDbHelper(getContext()).getWritableDatabase();
         int count = 0;
         switch (sUriMatcher.match(uri)) {
             case FORMS:

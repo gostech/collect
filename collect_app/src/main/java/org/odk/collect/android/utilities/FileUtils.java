@@ -17,7 +17,7 @@ package org.odk.collect.android.utilities;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
-import org.apache.commons.io.IOUtils;
+
 import org.javarosa.xform.parse.XFormParser;
 import org.kxml2.kdom.Document;
 import org.kxml2.kdom.Element;
@@ -411,9 +411,59 @@ public class FileUtils {
             deleteAndReport(tempMediaFolder);
         } else {
             for (File mediaFile : mediaFiles) {
-                org.apache.commons.io.FileUtils.moveFileToDirectory(mediaFile, formMediaPath, true);
+                CommonsFileUtils.moveFileToDirectory(mediaFile, formMediaPath, true);
             }
             deleteAndReport(tempMediaFolder);
+        }
+    }
+
+    public static void moveFileToDirectory(final File srcFile, final File destDir, final boolean createDestDir)
+            throws IOException {
+        validateMoveParameters(srcFile, destDir);
+        if (!destDir.exists() && createDestDir) {
+            destDir.mkdirs();
+        }
+        if (!destDir.exists()) {
+            throw new FileNotFoundException("Destination directory '" + destDir +
+                    "' does not exist [createDestDir=" + createDestDir + "]");
+        }
+        if (!destDir.isDirectory()) {
+            throw new IOException("Destination '" + destDir + "' is not a directory");
+        }
+        moveFile(srcFile, new File(destDir, srcFile.getName()));
+    }
+
+    private static void validateMoveParameters(final File src, final File dest) throws FileNotFoundException {
+        if (src == null) {
+            throw new NullPointerException("Source must not be null");
+        }
+        if (dest == null) {
+            throw new NullPointerException("Destination must not be null");
+        }
+        if (!src.exists()) {
+            throw new FileNotFoundException("Source '" + src + "' does not exist");
+        }
+    }
+
+    public static void moveFile(final File srcFile, final File destFile) throws IOException {
+        validateMoveParameters(srcFile, destFile);
+        if (srcFile.isDirectory()) {
+            throw new IOException("Source '" + srcFile + "' is a directory");
+        }
+        if (destFile.exists()) {
+            throw new IOException("Destination '" + destFile + "' already exists");
+        }
+        if (destFile.isDirectory()) {
+            throw new IOException("Destination '" + destFile + "' is a directory");
+        }
+        final boolean rename = srcFile.renameTo(destFile);
+        if (!rename) {
+            copyFile(srcFile, destFile);
+            if (!srcFile.delete()) {
+                CommonsFileUtils.deleteQuietly(destFile);
+                throw new IOException("Failed to delete original file '" + srcFile +
+                        "' after copy to '" + destFile + "'");
+            }
         }
     }
 }

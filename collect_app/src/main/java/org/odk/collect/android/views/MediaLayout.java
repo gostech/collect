@@ -1,11 +1,11 @@
 /*
  * Copyright (C) 2011 University of Washington
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the License
  * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
  * or implied. See the License for the specific language governing permissions and limitations under
@@ -31,6 +31,7 @@ import android.view.View.OnClickListener;
 import android.view.WindowManager;
 import android.widget.*;
 import android.widget.ImageView.ScaleType;
+
 import org.javarosa.core.model.FormIndex;
 import org.javarosa.core.reference.InvalidReferenceException;
 import org.javarosa.core.reference.ReferenceManager;
@@ -135,7 +136,7 @@ public class MediaLayout extends RelativeLayout implements OnClickListener {
             }
 
             Intent i = new Intent("android.intent.action.VIEW");
-            i.setDataAndType(Uri.fromFile(videoFile), "video/*");
+            i.setDataAndType(Uri.parse("content://" + videoFile.getPath()), "video/*");
             try {
                 ((Activity) getContext()).startActivity(i);
             } catch (ActivityNotFoundException e) {
@@ -231,7 +232,7 @@ public class MediaLayout extends RelativeLayout implements OnClickListener {
                                     Collect.getInstance().getActivityLogger().logInstanceAction(this, "onClick", "showImagePromptBigImage" + mSelectionDesignator, mIndex);
 
                                     Intent i = new Intent("android.intent.action.VIEW");
-                                    i.setDataAndType(Uri.fromFile(bigImage), "image/*");
+                                    i.setDataAndType(Uri.parse("content://" + bigImage.getPath()), "image/*");
                                     try {
                                         getContext().startActivity(i);
                                     } catch (ActivityNotFoundException e) {
