@@ -43,6 +43,7 @@ import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
+
 import org.javarosa.core.model.FormIndex;
 import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.core.model.instance.TreeElement;
@@ -69,12 +70,14 @@ import org.odk.collect.android.tasks.SaveResult;
 import org.odk.collect.android.tasks.SaveToDiskTask;
 import org.odk.collect.android.utilities.CompatibilityUtils;
 import org.odk.collect.android.utilities.FileUtils;
+import org.odk.collect.android.utilities.ImageUtils;
 import org.odk.collect.android.utilities.MediaUtils;
 import org.odk.collect.android.views.ODKView;
 import org.odk.collect.android.widgets.QuestionWidget;
 
 import java.io.File;
 import java.io.FileFilter;
+import java.io.FileNotFoundException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.LinkedHashMap;
@@ -574,13 +577,13 @@ public class FormEntryActivity extends Activity implements AnimationListener,
             case ANNOTATE_IMAGE:
             case SIGNATURE_CAPTURE:
             case IMAGE_CAPTURE:
-            /*
-             * We saved the image to the tempfile_path, but we really want it to
-			 * be in: /sdcard/odk/instances/[current instnace]/something.jpg so
-			 * we move it there before inserting it into the content provider.
-			 * Once the android image capture bug gets fixed, (read, we move on
-			 * from Android 1.6) we want to handle images the audio and video
-			 */
+                /*
+                 * We saved the image to the tempfile_path, but we really want it to
+                 * be in: /sdcard/odk/instances/[current instnace]/something.jpg so
+                 * we move it there before inserting it into the content provider.
+                 * Once the android image capture bug gets fixed, (read, we move on
+                 * from Android 1.6) we want to handle images the audio and video
+                 */
                 // The intent is empty, but we know we saved the image to the temp
                 // file
                 File fi = new File(Collect.TMPFILE_PATH);
@@ -590,6 +593,13 @@ public class FormEntryActivity extends Activity implements AnimationListener,
                         + System.currentTimeMillis() + ".jpg";
 
                 File nf = new File(s);
+
+                try {
+                    ImageUtils.resizeImage(fi, nf);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+
                 if (!fi.renameTo(nf)) {
                     Log.e(t, "Failed to rename " + fi.getAbsolutePath());
                 } else {
@@ -601,11 +611,11 @@ public class FormEntryActivity extends Activity implements AnimationListener,
                 saveAnswersForCurrentScreen(DO_NOT_EVALUATE_CONSTRAINTS);
                 break;
             case ALIGNED_IMAGE:
-            /*
-             * We saved the image to the tempfile_path; the app returns the full
-			 * path to the saved file in the EXTRA_OUTPUT extra. Take that file
-			 * and move it into the instance folder.
-			 */
+                /*
+                 * We saved the image to the tempfile_path; the app returns the full
+                 * path to the saved file in the EXTRA_OUTPUT extra. Take that file
+                 * and move it into the instance folder.
+                 */
                 String path = intent
                         .getStringExtra(android.provider.MediaStore.EXTRA_OUTPUT);
                 fi = new File(path);
@@ -626,13 +636,13 @@ public class FormEntryActivity extends Activity implements AnimationListener,
                 saveAnswersForCurrentScreen(DO_NOT_EVALUATE_CONSTRAINTS);
                 break;
             case IMAGE_CHOOSER:
-			/*
-			 * We have a saved image somewhere, but we really want it to be in:
-			 * /sdcard/odk/instances/[current instnace]/something.jpg so we move
-			 * it there before inserting it into the content provider. Once the
-			 * android image capture bug gets fixed, (read, we move on from
-			 * Android 1.6) we want to handle images the audio and video
-			 */
+                /*
+                 * We have a saved image somewhere, but we really want it to be in:
+                 * /sdcard/odk/instances/[current instnace]/something.jpg so we move
+                 * it there before inserting it into the content provider. Once the
+                 * android image capture bug gets fixed, (read, we move on from
+                 * Android 1.6) we want to handle images the audio and video
+                 */
 
                 // get gp of chosen file
                 Uri selectedImage = intent.getData();
@@ -874,11 +884,11 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
-		/*
-		 * We don't have the right view here, so we store the View's ID as the
-		 * item ID and loop through the possible views to find the one the user
-		 * clicked on.
-		 */
+        /*
+         * We don't have the right view here, so we store the View's ID as the
+         * item ID and loop through the possible views to find the one the user
+         * clicked on.
+         */
         for (QuestionWidget qw : ((ODKView) mCurrentView).getWidgets()) {
             if (item.getItemId() == qw.getId()) {
                 Collect.getInstance()
@@ -1417,14 +1427,14 @@ public class FormEntryActivity extends Activity implements AnimationListener,
     }
 
     // Hopefully someday we can use managed dialogs when the bugs are fixed
-	/*
-	 * Ideally, we'd like to use Android to manage dialogs with onCreateDialog()
-	 * and onPrepareDialog(), but dialogs with dynamic content are broken in 1.5
-	 * (cupcake). We do use managed dialogs for our static loading
-	 * ProgressDialog. The main issue we noticed and are waiting to see fixed
-	 * is: onPrepareDialog() is not called after a screen orientation change.
-	 * http://code.google.com/p/android/issues/detail?id=1639
-	 */
+    /*
+     * Ideally, we'd like to use Android to manage dialogs with onCreateDialog()
+     * and onPrepareDialog(), but dialogs with dynamic content are broken in 1.5
+     * (cupcake). We do use managed dialogs for our static loading
+     * ProgressDialog. The main issue we noticed and are waiting to see fixed
+     * is: onPrepareDialog() is not called after a screen orientation change.
+     * http://code.google.com/p/android/issues/detail?id=1639
+     */
 
     //
 
